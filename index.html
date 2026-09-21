@@ -1,943 +1,562 @@
+
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EnglishWithTis - Luyện Shadowing & Tự Động Lấy Phụ Đề YouTube</title>
-  <!-- Tailwind CSS & Font Awesome -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Lora:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THPT Số 1 Tư Nghĩa</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+   <link rel="manifest" href="manifest.php">
 
-  <style>
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #f8fafc;
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('sw.js').then(function(registration) {
+        console.log('ServiceWorker đăng ký thành công với phạm vi: ', registration.scope);
+      }, function(err) {
+        console.log('ServiceWorker đăng ký thất bại: ', err);
+      });
+    });
+  }
+</script>
+    <style>
+    .menu-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-top: 10px;
     }
-    .serif-text {
-      font-family: 'Lora', serif;
+    .menu-card {
+        background: white;
+        border-radius: 12px;
+        padding: 16px 10px;
+        text-align: center;
+        text-decoration: none;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+        border: 2px solid transparent;
+        transition: all 0.2s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
+    .menu-card:hover {
+        border-color: #A9792C;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        transform: translateY(-2px);
     }
-    ::-webkit-scrollbar-track {
-      background: #f1f5f9;
+    .menu-icon {
+        font-size: 36px;
+        margin-bottom: 8px;
+        display: block;
     }
-    ::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
-      border-radius: 9999px;
+    .menu-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: #13355E;
+        margin-bottom: 4px;
     }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #94a3b8;
+    .menu-desc {
+        font-size: 12px;
+        color: #666;
+        line-height: 1.4;
+        margin-bottom: 10px;
     }
-    .blur-mode .word-item {
-      filter: blur(7px);
-      transition: filter 0.2s ease;
-      cursor: pointer;
+    .menu-btn {
+        display: inline-block;
+        padding: 6px 14px;
+        background: #13355E;
+        color: white;
+        border-radius: 16px;
+        font-size: 12px;
+        font-weight: 600;
     }
-    .blur-mode .word-item:hover {
-      filter: blur(0px);
+    .menu-card:hover .menu-btn {
+        background: #A9792C;
     }
-    .active-sentence-card {
-      border-color: #38bdf8 !important;
-      background-color: #f0f9ff !important;
-      box-shadow: 0 4px 12px -2px rgba(56, 189, 248, 0.15);
+    .welcome-box {
+        background: linear-gradient(135deg, #13355E, #1a4a82);
+        border-radius: 12px;
+        padding: 16px;
+        color: white;
+        margin-bottom: 12px;
+        text-align: center;
     }
-  </style>
+    .welcome-title {
+        font-size: 17px;
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+    .welcome-sub {
+        font-size: 12px;
+        color: #A9C4E8;
+    }
+
+    /* Desktop: 3 cột */
+    @media (min-width: 600px) {
+        .menu-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        .menu-icon { font-size: 48px; }
+        .menu-title { font-size: 17px; }
+        .menu-desc { font-size: 13px; }
+        .menu-btn { font-size: 13px; }
+        .menu-card { padding: 24px 16px; }
+    }
+
+    /* ============ BGH ALERT WIDGET ============ */
+    .bgh-alert {
+        background: linear-gradient(to right, #fff9e6, #ffffff);
+        border: 2px solid #ffc107;
+        border-radius: 14px;
+        padding: 16px 18px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 14px rgba(255, 193, 7, 0.25);
+    }
+    .bgh-alert-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 12px;
+        padding-bottom: 10px;
+        border-bottom: 1px dashed #ffc107;
+    }
+    .bgh-alert-title {
+        font-size: 16px;
+        color: #8a5a00;
+        font-weight: 700;
+    }
+    .bgh-alert-title .count-badge {
+        background: #cc0000;
+        color: white;
+        padding: 2px 10px;
+        border-radius: 12px;
+        font-size: 14px;
+        margin-left: 4px;
+    }
+    .bgh-alert-subtitle {
+        font-size: 12px;
+        color: #999;
+        font-weight: normal;
+    }
+    .bgh-alert-list {
+        max-height: 360px;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .bgh-alert-item {
+        background: white;
+        border-left: 3px solid #4caf50;
+        padding: 10px 12px;
+        margin-bottom: 8px;
+        border-radius: 6px;
+        font-size: 13px;
+    }
+    .bgh-alert-item:last-child { margin-bottom: 0; }
+    .bgh-alert-item.lau {
+        border-left-color: #cc0000;
+        background: #fff5f5;
+    }
+    .bgh-alert-item-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 4px;
+        margin-bottom: 3px;
+    }
+    .bgh-alert-hs {
+        font-weight: 700;
+        color: #13355E;
+        font-size: 14px;
+    }
+    .bgh-alert-lop {
+        color: #A9792C;
+        font-weight: 600;
+        font-size: 12.5px;
+        margin-left: 4px;
+    }
+    .bgh-alert-time {
+        color: #888;
+        font-size: 11.5px;
+    }
+    .bgh-alert-info {
+        color: #444;
+        font-size: 12.5px;
+        margin-top: 4px;
+        line-height: 1.5;
+    }
+    .bgh-alert-info b { color: #333; }
+    .bgh-alert-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 6px;
+        font-size: 12px;
+        color: #666;
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+    .bgh-alert-gvcn {
+        background: #f0f4f8;
+        padding: 2px 8px;
+        border-radius: 10px;
+        color: #13355E;
+    }
+    .badge-lau {
+        background: #cc0000;
+        color: white;
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 11px;
+        font-weight: 700;
+    }
+    .bgh-alert-lydo {
+        margin-top: 6px;
+        padding: 6px 8px;
+        background: #f8f9fa;
+        border-radius: 4px;
+        font-size: 12px;
+        color: #555;
+        font-style: italic;
+    }
+</style>
 </head>
-<body class="text-slate-800 antialiased min-h-screen flex flex-col">
+<body>
+<!-- Loading Overlay -->
+<div id="loading-overlay" class="loading-overlay">
+    <div class="loading-spinner"></div>
+</div>
+<!-- HEADER -->
+<div class="header">
+    <img src="https://drive.google.com/thumbnail?id=1lRUK4k2UE4KlOPYRqjNy4pPf9-axGV3y&sz=w400"
+         class="school-logo" alt="Logo">
+    <div class="header-text">
+        <h1>THPT Số 1 Tư Nghĩa</h1>
+        <p>Xin chào, Đoàn Vũ Trọng                — Lớp 12A03                </p>
+        <p style="font-size:12px;color:#A9C4E8;margin-top:2px">
+            Thứ hai, ngày 21/09/2026        </p>
+    </div>
+    <a href="/dangnhap.php?thoat=1"
+       style="margin-left:auto;color:#A9792C;font-size:13px;
+              font-weight:600;text-decoration:none;white-space:nowrap">
+        Đăng xuất
+    </a>
+</div>
 
-  <!-- ==================== HEADER THANH ĐIỀU HƯỚNG ==================== -->
-  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
-    <div class="max-w-[1600px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-      
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-600 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-sky-200">
-          <i class="fa-solid fa-headphones-simple text-lg"></i>
+<div class="container">
+
+    <!-- ============ GVCN ALERT: SHL tuần này chưa đọc ============ -->
+    
+    <!-- ============ BGH ALERT: Cuộc chat AI có nội dung nhạy cảm ============ -->
+    
+    <!-- ============ BGH ALERT: Đơn xin phép chờ duyệt (48h) ============ -->
+    
+    <!-- Chào mừng -->
+    <!-- Welcome Box -->
+<div class="welcome-box">
+    <div class="welcome-title">Chào mừng đến với Edu.TuNghia1</div>
+    <div class="welcome-sub">
+        Hệ thống thông tin học sinh THPT Số 1 Tư Nghĩa
+    </div>
+    <div style="margin-top:10px;font-size:13px;color:#A9C4E8">
+        Năm học: <b style="color:white">2026-2027</b>
+    </div>
+    <div style="margin-top:8px;font-size:12px;color:#A9C4E8;line-height:1.6">
+        📍 366, Nguyễn Huệ, Xã Tư Nghĩa, Quảng Ngãi<br>
+        📞 0914899980 - 0974179755 - 0965777152    </div>
+</div>
+
+<!-- Thời tiết + Câu hay -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+
+    <!-- Thời tiết -->
+    <div class="card" style="padding:14px;text-align:center;margin-bottom:0">
+        <div style="font-size:12px;font-weight:600;color:#A9792C;margin-bottom:8px">
+            🌤 THỜI TIẾT
+        </div>
+        <div id="weather-box">
+            <div style="font-size:12px;color:#888">Đang tải...</div>
+        </div>
+        <div style="font-size:11px;color:#999;margin-top:6px">
+            Quảng Ngãi
+        </div>
+    </div>
+
+    <!-- Câu hay hôm nay -->
+    <div class="card" style="padding:14px;margin-bottom:0;
+         background:linear-gradient(135deg,#fff9f0,#fff3e0)">
+        <div style="font-size:12px;font-weight:600;color:#A9792C;margin-bottom:8px">
+            📚 CÂU HAY HÔM NAY
+        </div>
+                <div style="font-size:12px;color:#444;line-height:1.6;
+                    font-style:italic">
+            "Thất bại không phải là kết thúc — đó là bài học mà bộ não cần để trưởng thành hơn."
+        </div>
+                <div style="font-size:11px;color:#A9792C;
+                    margin-top:6px;font-weight:600">
+            — Khuyết danh        </div>
+                    </div>
+</div>
+
+<!-- Thông tin nhà trường -->
+<div class="card" style="padding:14px;margin-bottom:12px">
+    <div style="font-size:12px;font-weight:600;color:#A9792C;margin-bottom:12px">
+        🏫 THÔNG TIN NHÀ TRƯỜNG
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center">
+        <div>
+            <div style="font-size:24px;font-weight:700;color:#13355E">
+                37            </div>
+            <div style="font-size:11px;color:#666;margin-top:2px">Lớp học</div>
         </div>
         <div>
-          <div class="flex items-center gap-2">
-            <span class="font-bold text-slate-900 text-sm sm:text-base leading-tight">Video YouTube</span>
-            <span id="currentVideoBadge" class="bg-slate-100 text-slate-600 text-xs px-2 py-0.5 rounded-md font-mono font-medium border border-slate-200">LpUh8nUzRL8</span>
-          </div>
-          <p id="currentVideoTitle" class="text-xs text-slate-500 font-medium truncate max-w-[200px] sm:max-w-xs">After Life - "I'm Lisa" Scene</p>
+            <div style="font-size:24px;font-weight:700;color:#13355E">
+                1548            </div>
+            <div style="font-size:11px;color:#666;margin-top:2px">Học sinh</div>
         </div>
-      </div>
-
-      <nav class="hidden md:flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200/80 text-sm font-semibold">
-        <button class="px-5 py-1.5 rounded-lg bg-sky-500 text-white shadow-sm transition">Theo dõi</button>
-        <button class="px-4 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5">
-          <span>Nói</span> <i class="fa-solid fa-lock text-xs text-slate-400"></i>
-        </button>
-        <button class="px-4 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5">
-          <span>Chính tả</span> <i class="fa-solid fa-lock text-xs text-slate-400"></i>
-        </button>
-        <button class="px-4 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5">
-          <span>Từ vựng</span> <i class="fa-solid fa-lock text-xs text-slate-400"></i>
-        </button>
-      </nav>
-
-      <div class="flex items-center gap-2.5">
-        <button onclick="openModal('addVideoModal')" class="bg-sky-500 hover:bg-sky-600 active:scale-95 text-white font-semibold text-xs sm:text-sm px-4 py-2 rounded-xl flex items-center gap-2 shadow-sm shadow-sky-300 transition">
-          <i class="fa-solid fa-plus text-xs"></i>
-          <span>Thêm video</span>
-        </button>
-        <div class="flex items-center gap-2 pl-2 border-l border-slate-200">
-          <div class="w-8 h-8 rounded-full bg-violet-600 text-white font-bold flex items-center justify-center text-xs shadow-inner">
-            TV
-          </div>
-          <span class="text-sm font-medium text-slate-700 hidden lg:inline">Trọng vũ</span>
+        <div>
+            <div style="font-size:22px;font-weight:700;color:#A9792C">
+                99.8%            </div>
+            <div style="font-size:11px;color:#666;margin-top:2px">
+                Tốt nghiệp 2025-2026            </div>
         </div>
-      </div>
-
     </div>
-  </header>
+</div>
 
-  <!-- ==================== KHÔNG GIAN HỌC CHÍNH ==================== -->
-  <main class="max-w-[1600px] w-full mx-auto p-4 sm:p-6 flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6">
-
-    <!-- CỘT TRÁI: VIDEO + BẢNG PHỤ ĐỀ 3 TẦNG THÔNG MINH (7 Cột) -->
-    <div class="lg:col-span-7 flex flex-col gap-4">
-
-      <div class="relative w-full aspect-video bg-black rounded-2xl overflow-hidden shadow-md border border-slate-200">
-        <div id="youtube-player" class="w-full h-full"></div>
-      </div>
-
-      <!-- Thanh điều khiển Tua & Lặp -->
-      <div class="bg-white rounded-2xl p-3 border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-3">
-        <div class="flex items-center gap-1 sm:gap-2">
-          <button onclick="prevSentence()" title="Câu trước" class="w-9 h-9 rounded-xl hover:bg-slate-100 text-slate-600 flex items-center justify-center active:scale-95 transition">
-            <i class="fa-solid fa-backward-step text-sm"></i>
-          </button>
-          <button onclick="replayCurrent()" title="Phát lại câu này" class="w-9 h-9 rounded-xl hover:bg-slate-100 text-slate-600 flex items-center justify-center active:scale-95 transition">
-            <i class="fa-solid fa-rotate-left text-sm"></i>
-          </button>
-          <button id="mainPlayBtn" onclick="togglePlay()" title="Phát / Dừng" class="w-10 h-10 rounded-xl bg-sky-50 text-sky-600 hover:bg-sky-500 hover:text-white flex items-center justify-center shadow-sm active:scale-95 transition">
-            <i id="mainPlayIcon" class="fa-solid fa-play text-sm"></i>
-          </button>
-          <button onclick="nextSentence()" title="Câu tiếp theo" class="w-9 h-9 rounded-xl hover:bg-slate-100 text-slate-600 flex items-center justify-center active:scale-95 transition">
-            <i class="fa-solid fa-forward-step text-sm"></i>
-          </button>
-        </div>
-
-        <div class="flex items-center gap-2 text-xs font-semibold">
-          <!-- Tốc độ -->
-          <div class="relative">
-            <button onclick="toggleDropdown('speedMenu')" class="bg-slate-50 hover:bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-slate-700 transition">
-              <i class="fa-solid fa-bolt text-amber-500"></i>
-              <span id="speedLabel">1x</span>
-              <i class="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
-            </button>
-            <div id="speedMenu" class="hidden absolute left-0 bottom-full mb-1 w-24 bg-white border border-slate-200 rounded-xl shadow-lg p-1 z-30">
-              <button onclick="setSpeed(0.5)" class="w-full text-left px-2 py-1 text-xs hover:bg-sky-50 rounded-md">0.5x</button>
-              <button onclick="setSpeed(0.75)" class="w-full text-left px-2 py-1 text-xs hover:bg-sky-50 rounded-md">0.75x</button>
-              <button onclick="setSpeed(1.0)" class="w-full text-left px-2 py-1 text-xs hover:bg-sky-50 rounded-md font-bold text-sky-600">1.0x Chuẩn</button>
-              <button onclick="setSpeed(1.25)" class="w-full text-left px-2 py-1 text-xs hover:bg-sky-50 rounded-md">1.25x</button>
+<!-- Tin nổi bật -->
+<div class="card" style="padding:14px;margin-bottom:12px">
+    <div style="font-size:12px;font-weight:600;color:#A9792C;margin-bottom:12px">
+        📰 TIN NỔI BẬT
+    </div>
+        <a href="thong-bao.php" style="text-decoration:none">
+        <div style="padding:10px 0;border-bottom:1px solid #eee;
+                    display:flex;gap:10px;align-items:flex-start">
+            <span style="font-size:18px">
+                📢            </span>
+            <div style="flex:1">
+                <div style="font-size:14px;font-weight:600;color:#13355E;
+                            line-height:1.4">
+                    Về việc thu BHYT, hồ sơ hưởng chế độ chính sách của học sinh  năm học 2026 - 2027                                                                <span style="display:inline-block;padding:1px 6px;
+                                     background:#A9792C;color:white;border-radius:8px;
+                                     font-size:10px;font-weight:700;vertical-align:middle;
+                                     margin-left:4px">
+                            🔗 1                        </span>
+                                    </div>
+                <div style="font-size:12px;color:#999;margin-top:3px">
+                    18/09/2026                </div>
             </div>
-          </div>
-
-          <!-- Lặp câu -->
-          <button id="loopBtn" onclick="toggleLoop()" class="bg-slate-50 hover:bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-slate-700 transition">
-            <i class="fa-solid fa-repeat text-slate-400"></i>
-            <span>Lặp: <span id="loopStatus">Tắt</span></span>
-          </button>
-
-          <!-- Dừng cuối câu -->
-          <button id="autoPauseBtn" onclick="toggleAutoPause()" class="bg-slate-50 hover:bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-slate-700 transition">
-            <i class="fa-solid fa-pause text-slate-400"></i>
-            <span>Dừng câu: <span id="autoPauseStatus">Tắt</span></span>
-          </button>
+            <span style="color:#A9792C;font-size:16px">›</span>
         </div>
-      </div>
-
-      <!-- HỘP PHỤ ĐỀ 3 TẦNG TRỌNG TÂM -->
-      <div id="focusCard" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm relative flex flex-col justify-between min-h-[320px] transition-all">
-        
-        <div class="flex flex-col items-center justify-center text-center my-auto py-4 w-full">
-          
-          <!-- TẦNG 1: CÂU TIẾNG ANH -->
-          <div id="subEnglish" class="serif-text text-2xl sm:text-3xl lg:text-4xl font-semibold text-slate-900 tracking-tight leading-snug flex flex-wrap justify-center gap-x-2 gap-y-1">
-          </div>
-
-          <!-- TẦNG 2: PHIÊN ÂM IPA TỪNG TỪ -->
-          <div id="subIPA" class="mt-3 flex flex-wrap justify-center gap-x-2 text-slate-500 font-mono text-sm sm:text-base tracking-wide transition-opacity">
-          </div>
-
-          <!-- Ngữ cảnh -->
-          <div id="subContext" class="mt-3 text-xs text-slate-400 italic">
-          </div>
-
-          <!-- TẦNG 3: BẢN DỊCH TIẾNG VIỆT ĐÃ DỊCH SẴN -->
-          <div id="subVietnamese" class="mt-4 text-base sm:text-lg font-medium text-slate-600 transition-opacity">
-          </div>
-
+    </a>
+        <a href="thong-bao.php" style="text-decoration:none">
+        <div style="padding:10px 0;border-bottom:1px solid #eee;
+                    display:flex;gap:10px;align-items:flex-start">
+            <span style="font-size:18px">
+                📢            </span>
+            <div style="flex:1">
+                <div style="font-size:14px;font-weight:600;color:#13355E;
+                            line-height:1.4">
+                    KHAI BÁO THÔNG TIN SỨC KHỎE NĂM HỌC 2026-2027                                                                <span style="display:inline-block;padding:1px 6px;
+                                     background:#A9792C;color:white;border-radius:8px;
+                                     font-size:10px;font-weight:700;vertical-align:middle;
+                                     margin-left:4px">
+                            🔗 1                        </span>
+                                    </div>
+                <div style="font-size:12px;color:#999;margin-top:3px">
+                    14/09/2026                </div>
+            </div>
+            <span style="color:#A9792C;font-size:16px">›</span>
         </div>
-
-        <!-- CÔNG CỤ DƯỚI ĐÁY HỘP PHỤ ĐỀ -->
-        <div class="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 text-xs font-semibold text-slate-600">
-          <div class="flex items-center gap-1.5 sm:gap-2">
-            <button id="blurToggleBtn" onclick="toggleBlur()" class="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 flex items-center gap-1.5 transition">
-              <i class="fa-solid fa-eye-slash text-slate-400"></i>
-              <span>Làm mờ</span>
-            </button>
-            <button id="karaokeToggleBtn" onclick="toggleKaraoke()" class="px-3 py-1.5 rounded-lg border border-sky-200 bg-sky-50 text-sky-600 flex items-center gap-1.5 transition">
-              <i class="fa-solid fa-microphone-lines"></i>
-              <span>Karaoke</span>
-            </button>
-          </div>
-
-          <div class="flex items-center gap-1.5 sm:gap-2">
-            <button id="ipaToggleBtn" onclick="toggleIPA()" class="px-2.5 py-1.5 rounded-lg border border-sky-300 bg-sky-500 text-white font-bold transition">
-              IPA
-            </button>
-            <button id="viToggleBtn" onclick="toggleVI()" class="px-2.5 py-1.5 rounded-lg border border-sky-300 bg-sky-500 text-white font-bold transition">
-              VI
-            </button>
-            <button onclick="toggleAccent()" id="accentBtn" class="px-2.5 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 flex items-center gap-1 transition">
-              <i class="fa-solid fa-volume-high text-sky-500"></i>
-              <span id="accentLabel">US</span>
-            </button>
-            <button onclick="cycleFontSize()" title="Tăng giảm kích cỡ chữ" class="px-2.5 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 font-bold transition">
-              <span id="fontSizeLabel">AA</span>
-            </button>
-          </div>
+    </a>
+        <a href="thong-bao.php" style="text-decoration:none">
+        <div style="padding:10px 0;border-bottom:1px solid #eee;
+                    display:flex;gap:10px;align-items:flex-start">
+            <span style="font-size:18px">
+                📢            </span>
+            <div style="flex:1">
+                <div style="font-size:14px;font-weight:600;color:#13355E;
+                            line-height:1.4">
+                    ĐĂNG KÝ MÔN THI TỐT NGHIỆP NĂM 2027                                                                <span style="display:inline-block;padding:1px 6px;
+                                     background:#A9792C;color:white;border-radius:8px;
+                                     font-size:10px;font-weight:700;vertical-align:middle;
+                                     margin-left:4px">
+                            🔗 1                        </span>
+                                    </div>
+                <div style="font-size:12px;color:#999;margin-top:3px">
+                    14/09/2026                </div>
+            </div>
+            <span style="color:#A9792C;font-size:16px">›</span>
         </div>
+    </a>
+        <a href="thong-bao.php"
+       style="display:block;text-align:center;margin-top:10px;
+              font-size:13px;color:#A9792C;font-weight:600;
+              text-decoration:none">
+        Xem tất cả thông báo →
+    </a>
+</div>
 
-      </div>
+    <!-- Menu điều hướng -->
+<div class="menu-grid">
 
-    </div>
+    <a href="tra-cuu.php" class="menu-card">
+        <span class="menu-icon">📊</span>
+        <div class="menu-title">Tra cứu điểm</div>
+        <span class="menu-btn">Xem →</span>
+    </a>
 
-    <!-- CỘT PHẢI: BẢN GHI PHỤ ĐỀ (TRANSCRIPT) ĐỒNG BỘ THEO GIÂY (5 Cột) -->
-    <div class="lg:col-span-5 flex flex-col bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden h-[640px] lg:h-auto">
-      
-      <div class="p-4 border-b border-slate-100 flex flex-col gap-3 bg-slate-50/50">
-        <div class="flex items-center justify-between">
-          <span id="totalSentenceBadge" class="font-bold text-slate-800 text-sm">0 câu</span>
-          <div class="flex items-center gap-2 text-xs text-slate-500">
-            <span class="text-emerald-600 font-semibold flex items-center gap-1">
-              <i class="fa-solid fa-circle-check"></i> Đã nạp phụ đề
-            </span>
-          </div>
-        </div>
+        <a href="xin-phep.php" class="menu-card">
+        <span class="menu-icon">📝</span>
+        <div class="menu-title">Xin phép nghỉ</div>
+        <span class="menu-btn">Nộp đơn →</span>
+    </a>
+    
+        <a href="lich-su.php" class="menu-card">
+        <span class="menu-icon">📋</span>
+        <div class="menu-title">Lịch sử đơn</div>
+        <span class="menu-btn">Xem →</span>
+    </a>
+    
+    <a href="tkb.php" class="menu-card">
+        <span class="menu-icon">📅</span>
+        <div class="menu-title">Thời khóa biểu</div>
+        <span class="menu-btn">Xem TKB →</span>
+    </a>
 
-        <div class="relative">
-          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-          <input type="text" id="searchInput" oninput="filterTranscript()" placeholder="Tìm kiếm bản ghi..." class="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-4 py-2 text-xs focus:outline-none focus:border-sky-500 transition">
-        </div>
-      </div>
+        <a href="co-cau-lop.php" class="menu-card">
+        <span class="menu-icon">👥</span>
+        <div class="menu-title">Cơ cấu tổ chức lớp</div>
+        <span class="menu-btn">Xem →</span>
+    </a>
+    
+        <a href="so-do-lop.php" class="menu-card">
+        <span class="menu-icon">🪑</span>
+        <div class="menu-title">Sơ đồ chỗ ngồi</div>
+        <span class="menu-btn">Xem →</span>
+    </a>
+    
+        <a href="so-theo-doi.php" class="menu-card">
+        <span class="menu-icon">📔</span>
+        <div class="menu-title">
+            Sổ theo dõi của tôi        </div>
+        <span class="menu-btn">Xem →</span>
+    </a>
+    
+    <a href="van-ban.php" class="menu-card">
+        <span class="menu-icon">📜</span>
+        <div class="menu-title">Văn bản trường</div>
+        <span class="menu-btn">Xem →</span>
+    </a>
 
-      <div id="transcriptList" class="flex-1 overflow-y-auto p-3 space-y-2">
-      </div>
+        <a href="troly-ai.php" class="menu-card">
+        <span class="menu-icon">🤖</span>
+        <div class="menu-title">
+            Trợ lý AI        </div>
+        <span class="menu-btn">
+            Hỏi bài →        </span>
+    </a>
+    
+    <a href="thong-bao.php" class="menu-card">
+        <span class="menu-icon">📢</span>
+        <div class="menu-title">Thông báo</div>
+        <span class="menu-btn">Xem →</span>
+    </a>
+    <a href="gop-y.php" class="menu-card">
+    <span class="menu-icon">📬</span>
+    <div class="menu-title">Hộp thư góp ý</div>
+    <span class="menu-btn">Gửi góp ý →</span>
+    </a>
+                
+</div>
 
-    </div>
+</div>
 
-  </main>
+<!-- FOOTER -->
+<div class="footer">
+    © 2026 THPT Số 1 Tư Nghĩa — Quảng Ngãi
+</div>
+<script>
+// Ẩn/hiện nút theo vai trò
+window.addEventListener('load', function() {
+    const vaiTro = localStorage.getItem('vai_tro') || 'khach';
 
-  <!-- ==================== POPUP TRA TỪ ĐIỂN TỨC THÌ ==================== -->
-  <div id="dictModal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl border border-slate-100">
-      <div class="flex justify-between items-start">
-        <div>
-          <h3 id="dictWord" class="text-2xl font-bold text-slate-900">word</h3>
-          <p id="dictIpa" class="text-sky-600 font-mono text-sm">/wɜːrd/</p>
-        </div>
-        <button onclick="speakWord(currentPopupWord)" class="w-9 h-9 rounded-full bg-sky-50 hover:bg-sky-100 text-sky-600 flex items-center justify-center transition">
-          <i class="fa-solid fa-volume-high text-sm"></i>
-        </button>
-      </div>
-      <div class="mt-4 pt-3 border-t border-slate-100">
-        <span class="text-xs uppercase tracking-wider font-semibold text-slate-400">Bản dịch nghĩa</span>
-        <p id="dictMeaning" class="text-base text-slate-700 font-medium mt-1">Đang tra cứu...</p>
-      </div>
-      <div class="mt-5 flex gap-2">
-        <button onclick="closeModal('dictModal')" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition">
-          Đóng
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ==================== MODAL THÊM VIDEO & TỰ ĐỘNG LẤY FILE SRT / DỊCH ==================== -->
-  <div id="addVideoModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-          <i class="fa-brands fa-youtube text-red-500 text-xl"></i>
-          Thêm video & Tự động bóc phụ đề SRT
-        </h3>
-        <button onclick="closeModal('addVideoModal')" class="text-slate-400 hover:text-slate-600">
-          <i class="fa-solid fa-xmark text-lg"></i>
-        </button>
-      </div>
-
-      <div class="space-y-4">
-        <div>
-          <label class="text-xs font-semibold text-slate-700 block mb-1">Dán liên kết video YouTube vào đây</label>
-          <input type="text" id="customYoutubeUrl" placeholder="https://www.youtube.com/watch?v=..." class="w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-sky-500">
-        </div>
-
-        <!-- Trạng thái tải ngầm -->
-        <div id="fetchStatusBox" class="hidden p-3 rounded-xl bg-sky-50 border border-sky-100 text-xs text-sky-800 flex items-center gap-2">
-          <i class="fa-solid fa-circle-notch fa-spin text-sky-600"></i>
-          <span id="fetchStatusText">Đang tìm kiếm file phụ đề từ YouTube...</span>
-        </div>
-
-        <!-- Tùy chọn tải file .srt nếu video không có sẵn phụ đề -->
-        <div class="p-3.5 bg-slate-50 border border-dashed border-slate-300 rounded-2xl">
-          <div class="flex items-center justify-between mb-1.5">
-            <span class="text-xs font-semibold text-slate-700">Tải file .srt từ máy tính (Dự phòng)</span>
-            <span class="text-[10px] text-slate-400">Nếu YouTube không có sub</span>
-          </div>
-          <input type="file" id="srtFileInput" accept=".srt,.vtt,.txt" onchange="handleSrtFileUpload(event)" class="text-xs text-slate-500 file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-sky-50 file:text-sky-700 hover:file:bg-sky-100 cursor-pointer w-full">
-        </div>
-
-        <div>
-          <label class="text-xs font-semibold text-slate-700 block mb-1">Hoặc chọn nhanh video mẫu đã nạp sẵn:</label>
-          <div class="grid grid-cols-2 gap-2 text-xs">
-            <button onclick="loadPresetVideo(0)" class="p-2.5 border border-sky-300 bg-sky-50/50 hover:bg-sky-100/50 rounded-xl text-left font-medium text-slate-800">
-              🎬 After Life (Lisa Scene - 18 câu)
-            </button>
-            <button onclick="loadPresetVideo(1)" class="p-2.5 border border-slate-200 hover:bg-slate-50 rounded-xl text-left font-medium text-slate-700">
-              🍝 Gigi Hadid Cooking Pasta
-            </button>
-          </div>
-        </div>
-
-        <div class="pt-2">
-          <button id="submitVideoBtn" onclick="handleAutoFetchAndTranslate()" class="w-full bg-sky-500 hover:bg-sky-600 text-white font-semibold py-2.5 rounded-xl text-sm transition flex items-center justify-center gap-2 shadow-md shadow-sky-200">
-            <i class="fa-solid fa-wand-magic-sparkles"></i>
-            <span>Tự động lấy phụ đề & Dịch trước</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ==================== LOGIC JAVASCRIPT ĐỒNG BỘ THỜI GIAN THỰC ==================== -->
-  <script>
-    // Kho từ điển IPA phong phú
-    const dictionary = {
-      "it": { ipa: "/ɪt/", vi: "nó, điều đó" },
-      "was": { ipa: "/wɒz/", vi: "đã là, thì" },
-      "really": { ipa: "/ˈrɪəli/", vi: "thực sự, rất" },
-      "nice": { ipa: "/naɪs/", vi: "tuyệt vời, hay" },
-      "had": { ipa: "/hæd/", vi: "đã có, đã ăn" },
-      "a": { ipa: "/ə/", vi: "một" },
-      "lot": { ipa: "/lɒt/", vi: "nhiều" },
-      "of": { ipa: "/əv/", vi: "của" },
-      "sides": { ipa: "/ˈsaɪdz/", vi: "món phụ, món ăn kèm" },
-      "but": { ipa: "/bʌt/", vi: "nhưng" },
-      "i": { ipa: "/aɪ/", vi: "tôi" },
-      "dont": { ipa: "/doʊnt/", vi: "không" },
-      "don't": { ipa: "/doʊnt/", vi: "không" },
-      "eat": { ipa: "/iːt/", vi: "ăn" },
-      "meat": { ipa: "/miːt/", vi: "thịt" },
-      "that": { ipa: "/ðæt/", vi: "điều đó, cái kia" },
-      "looks": { ipa: "/lʊks/", vi: "trông có vẻ" },
-      "incredible": { ipa: "/ɪnˈkrɛdəbəl/", vi: "tuyệt vời, không thể tin được" },
-      "so": { ipa: "/soʊ/", vi: "vì vậy, vậy thì" },
-      "thank": { ipa: "/θæŋk/", vi: "cảm ơn" },
-      "you": { ipa: "/juː/", vi: "bạn, anh" },
-      "ive": { ipa: "/aɪv/", vi: "tôi đã" },
-      "i've": { ipa: "/aɪv/", vi: "tôi đã" },
-      "been": { ipa: "/bɪn/", vi: "từng, đã đang" },
-      "meaning": { ipa: "/ˈmiːnɪŋ/", vi: "dự định, có ý định" },
-      "to": { ipa: "/tuː/", vi: "để, tới" },
-      "ask": { ipa: "/æsk/", vi: "hỏi" },
-      "did": { ipa: "/dɪd/", vi: "đã" },
-      "learn": { ipa: "/lɜːrn/", vi: "học" },
-      "how": { ipa: "/haʊ/", vi: "làm sao, thế nào" },
-      "cook": { ipa: "/kʊk/", vi: "nấu ăn" },
-      "while": { ipa: "/waɪl/", vi: "trong khi" },
-      "were": { ipa: "/wɜːr/", vi: "đã ở" },
-      "in": { ipa: "/ɪn/", vi: "trong" },
-      "prison": { ipa: "/ˈprɪzən/", vi: "nhà tù, trại giam" },
-      "know": { ipa: "/noʊ/", vi: "biết" },
-      "she": { ipa: "/ʃiː/", vi: "cô ấy" },
-      "for": { ipa: "/fɔːr/", vi: "trong khoảng" },
-      "10": { ipa: "/tɛn/", vi: "mười" },
-      "years": { ipa: "/jɪərz/", vi: "năm" },
-      "before": { ipa: "/bɪˈfɔːr/", vi: "trước khi" },
-      "came": { ipa: "/keɪm/", vi: "đến" },
-      "work": { ipa: "/wɜːrk/", vi: "làm việc" },
-      "us": { ipa: "/ʌs/", vi: "chúng tôi" }
-    };
-
-    function getAutoIPA(word) {
-      const clean = word.toLowerCase().replace(/[^a-z]/g, '');
-      if (dictionary[clean]) return dictionary[clean].ipa;
-      let ipa = clean
-        .replace(/tion/g, 'ʃən')
-        .replace(/sh/g, 'ʃ')
-        .replace(/ch/g, 'tʃ')
-        .replace(/th/g, 'θ')
-        .replace(/ph/g, 'f')
-        .replace(/ee/g, 'iː')
-        .replace(/oo/g, 'uː')
-        .replace(/ea/g, 'iː')
-        .replace(/ai/g, 'eɪ')
-        .replace(/ay/g, 'eɪ')
-        .replace(/igh/g, 'aɪ');
-      return `/${ipa}/`;
+    // Nút GVCN — chỉ GVCN và BGH thấy
+    const nutGVCN = document.getElementById('nut-gvcn');
+    if (nutGVCN) {
+        nutGVCN.style.display = 
+            (vaiTro === 'gvcn' || vaiTro === 'bgh') ? '' : 'none';
     }
 
-    // Video mẫu đã được nạp sẵn 18 câu chuẩn xác
-    const videoPresets = [
-      {
-        videoId: "LpUh8nUzRL8",
-        title: 'After Life - "I\'m Lisa" Scene #AfterLife',
-        sentences: [
-          { id: 7, start: 0.0, end: 1.5, text: "It was really nice.", vi: "Buổi tối rất tuyệt.", context: "Này, Millie. Ừm?" },
-          { id: 8, start: 1.6, end: 3.5, text: "Had a lot of sides.", vi: "Có rất nhiều món phụ.", context: "Này, Millie. Ừm?" },
-          { id: 9, start: 3.6, end: 6.5, text: "But I don't really eat meat.", vi: "Nhưng tôi không thực sự ăn thịt.", context: "Này, Millie. Ừm?" },
-          { id: 10, start: 6.6, end: 8.5, text: "That looks incredible. So, thank you.", vi: "Trông thật tuyệt vời. Cảm ơn anh.", context: "Này, Millie. Ừm?" },
-          { id: 11, start: 8.6, end: 12.0, text: "I don't know, but my quiches never turn out.", vi: "Tôi không biết tại sao, nhưng món quiche của tôi chẳng bao giờ được như ý.", context: "Này, Millie. Ừm?" },
-          { id: 12, start: 12.1, end: 16.0, text: "I've been meaning to ask you, did you learn how to cook while you were in prison?", vi: "Tôi đã định hỏi bạn, bạn học nấu ăn khi ở trong tù à?", context: "Này, Millie. Ừm?" },
-          { id: 13, start: 16.1, end: 19.5, text: "You know she was in prison for 10 years before she came to work for us.", vi: "Bạn biết đấy, cô ấy đã ở tù 10 năm trước khi đến làm việc với chúng tôi.", context: "Này, Millie. Ừm?" },
-          { id: 14, start: 19.6, end: 20.8, text: "Right?", vi: "Đúng không?", context: "Này, Millie. Ừm?" }
-        ]
-      },
-      {
-        videoId: "qOEcqimJJI8",
-        title: "Gigi Hadid Makes Pasta Dinner | Now Serving | Vogue",
-        sentences: [
-          { id: 1, start: 0.5, end: 4.0, text: "Hi everyone, I'm Gigi Hadid and today I am cooking pasta.", vi: "Chào mọi người, tôi là Gigi Hadid và hôm nay tôi đang nấu mì Ý.", context: "Vogue Video" },
-          { id: 2, start: 4.2, end: 8.0, text: "This is one of my favorite dishes to make at home.", vi: "Đây là một trong những món ăn tôi thích làm nhất tại nhà.", context: "Vogue Video" }
-        ]
-      }
-    ];
-
-    let currentVideoIndex = 0;
-    let currentSentenceIndex = 0;
-    let player = null;
-    let syncTimer = null;
-    let isLooping = false;
-    let isAutoPause = false;
-    let isBlur = false;
-    let isKaraoke = true;
-    let showIPA = true;
-    let showVI = true;
-    let currentAccent = 'US';
-    let fontSizes = ['text-2xl sm:text-3xl lg:text-4xl', 'text-xl sm:text-2xl lg:text-3xl', 'text-3xl sm:text-4xl lg:text-5xl'];
-    let currentFontIndex = 0;
-    let currentPopupWord = '';
-
-    // ==================== TÍCH HỢP YOUTUBE API ====================
-    function onYouTubeIframeAPIReady() {
-      loadVideoPlayer(videoPresets[currentVideoIndex].videoId);
+    // Nút BGH — chỉ BGH thấy
+    const nutBGH = document.getElementById('nut-bgh');
+    if (nutBGH) {
+        nutBGH.style.display = 
+            vaiTro === 'bgh' ? '' : 'none';
     }
+});
+</script>
+<script src="assets/js/loading.js"></script>
+<script>
+// Đăng ký Service Worker
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js')
+            .then(function(reg) {
+                console.log('SW registered');
+            })
+            .catch(function(err) {
+                console.log('SW error:', err);
+            });
+    });
+}
+</script>
+<script>
+// Lấy thời tiết Quảng Ngãi
+async function layThoiTiet() {
+    try {
+        // Dùng wttr.in - miễn phí, không cần API key
+        const res  = await fetch(
+            'https://wttr.in/Quang+Ngai,Vietnam?format=j1'
+        );
+        const data = await res.json();
 
-    function loadVideoPlayer(videoId) {
-      if (player && player.loadVideoById) {
-        player.loadVideoById(videoId);
-        return;
-      }
-      player = new YT.Player('youtube-player', {
-        videoId: videoId,
-        playerVars: {
-          'playsinline': 1,
-          'controls': 1,
-          'rel': 0,
-          'modestbranding': 1
-        },
-        events: {
-          'onReady': () => {
-            renderCurrentSentence();
-            renderTranscriptList();
-            startSyncLoop();
-          },
-          'onStateChange': onPlayerStateChange
-        }
-      });
-    }
+        const current  = data.current_condition[0];
+        const nhietDo  = current.temp_C;
+        const moTa     = current.lang_vi
+                       ? current.lang_vi[0].value
+                       : current.weatherDesc[0].value;
+        const doAm     = current.humidity;
+        const code     = parseInt(current.weatherCode);
 
-    function onPlayerStateChange(event) {
-      const playIcon = document.getElementById('mainPlayIcon');
-      if (event.data === YT.PlayerState.PLAYING) {
-        playIcon.className = "fa-solid fa-pause text-sm";
-      } else {
-        playIcon.className = "fa-solid fa-play text-sm";
-      }
-    }
+        // Icon theo mã thời tiết
+        let icon = '🌤';
+        if (code === 113) icon = '☀️';
+        else if (code <= 116) icon = '⛅';
+        else if (code <= 122) icon = '☁️';
+        else if (code <= 200) icon = '🌫';
+        else if (code <= 314) icon = '🌧';
+        else if (code <= 377) icon = '⛈';
 
-    // ==================== ĐỒNG BỘ THỜI GIAN THỰC (100MS) ====================
-    function startSyncLoop() {
-      if (syncTimer) clearInterval(syncTimer);
-      syncTimer = setInterval(() => {
-        if (!player || !player.getCurrentTime) return;
-        const currentTime = player.getCurrentTime();
-        const sentences = videoPresets[currentVideoIndex].sentences;
-        const cur = sentences[currentSentenceIndex];
-
-        if (cur && currentTime >= cur.end) {
-          if (isLooping) {
-            player.seekTo(cur.start, true);
-            return;
-          } else if (isAutoPause && player.getPlayerState() === YT.PlayerState.PLAYING) {
-            player.pauseVideo();
-            return;
-          }
-        }
-
-        const matchIndex = sentences.findIndex(s => currentTime >= s.start && currentTime <= s.end);
-        if (matchIndex !== -1 && matchIndex !== currentSentenceIndex) {
-          currentSentenceIndex = matchIndex;
-          renderCurrentSentence();
-          highlightTranscriptItem();
-        }
-      }, 100);
-    }
-
-    // ==================== HIỂN THỊ PHỤ ĐỀ 3 TẦNG ====================
-    function renderCurrentSentence() {
-      const sentences = videoPresets[currentVideoIndex].sentences;
-      const s = sentences[currentSentenceIndex];
-      if (!s) return;
-
-      const subEnglish = document.getElementById('subEnglish');
-      const subIPA = document.getElementById('subIPA');
-      const subVietnamese = document.getElementById('subVietnamese');
-      const subContext = document.getElementById('subContext');
-
-      const words = s.text.split(' ');
-      subEnglish.innerHTML = '';
-      subIPA.innerHTML = '';
-
-      words.forEach((word) => {
-        const cleanWord = word.toLowerCase().replace(/[^a-z']/g, '');
-        const ipaText = getAutoIPA(cleanWord);
-        const viText = dictionary[cleanWord] ? dictionary[cleanWord].vi : 'từ vựng';
-
-        const spanWord = document.createElement('span');
-        spanWord.className = "word-item cursor-pointer hover:text-sky-600 transition px-1 py-0.5 rounded";
-        spanWord.innerText = word;
-        spanWord.onclick = () => openDict(cleanWord, ipaText, viText);
-        subEnglish.appendChild(spanWord);
-
-        const spanIpa = document.createElement('span');
-        spanIpa.className = "px-1";
-        spanIpa.innerText = ipaText;
-        subIPA.appendChild(spanIpa);
-      });
-
-      subVietnamese.innerText = s.vi;
-      subContext.innerText = s.context ? `"${s.context}"` : '';
-
-      subIPA.style.display = showIPA ? 'flex' : 'none';
-      subVietnamese.style.display = showVI ? 'block' : 'none';
-    }
-
-    // ==================== DANH SÁCH BẢN GHI PHẢI ====================
-    function renderTranscriptList() {
-      const listEl = document.getElementById('transcriptList');
-      const sentences = videoPresets[currentVideoIndex].sentences;
-      document.getElementById('totalSentenceBadge').innerText = `${sentences.length} câu`;
-
-      listEl.innerHTML = '';
-      sentences.forEach((s, index) => {
-        const item = document.createElement('div');
-        item.id = `trans-item-${index}`;
-        item.className = `p-3.5 rounded-2xl border transition-all cursor-pointer flex items-start gap-3 ${
-          index === currentSentenceIndex 
-            ? 'active-sentence-card' 
-            : 'bg-white border-slate-200 hover:border-slate-300'
-        }`;
-        item.onclick = () => jumpToSentence(index);
-
-        item.innerHTML = `
-          <div class="flex items-center gap-1.5 pt-0.5 text-xs font-semibold text-slate-400">
-            <span class="w-5 text-right font-mono">${s.id}</span>
-            <i class="fa-solid fa-circle-check text-emerald-500 text-sm"></i>
-          </div>
-          <div class="flex-1">
-            <p class="text-sm font-semibold text-slate-800 leading-snug">${s.text}</p>
-            <p class="text-xs text-slate-500 font-medium mt-1">${s.vi}</p>
-          </div>
+        document.getElementById('weather-box').innerHTML = `
+            <div style="font-size:32px">${icon}</div>
+            <div style="font-size:22px;font-weight:700;color:#13355E">
+                ${nhietDo}°C
+            </div>
+            <div style="font-size:11px;color:#666;margin-top:2px">
+                💧 ${doAm}%
+            </div>
         `;
-        listEl.appendChild(item);
-      });
+    } catch(e) {
+        document.getElementById('weather-box').innerHTML =
+            '<div style="font-size:12px;color:#888">Không tải được</div>';
     }
+}
 
-    function highlightTranscriptItem() {
-      const sentences = videoPresets[currentVideoIndex].sentences;
-      sentences.forEach((_, idx) => {
-        const el = document.getElementById(`trans-item-${idx}`);
-        if (!el) return;
-        if (idx === currentSentenceIndex) {
-          el.className = 'p-3.5 rounded-2xl border transition-all cursor-pointer flex items-start gap-3 active-sentence-card';
-          el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        } else {
-          el.className = 'p-3.5 rounded-2xl border transition-all cursor-pointer flex items-start gap-3 bg-white border-slate-200 hover:border-slate-300';
-        }
-      });
-    }
-
-    // ==================== ĐIỀU KHIỂN & CHẾ ĐỘ ====================
-    function togglePlay() {
-      if (!player) return;
-      if (player.getPlayerState() === YT.PlayerState.PLAYING) {
-        player.pauseVideo();
-      } else {
-        player.playVideo();
-      }
-    }
-
-    function jumpToSentence(index) {
-      currentSentenceIndex = index;
-      const s = videoPresets[currentVideoIndex].sentences[index];
-      if (player && s) {
-        player.seekTo(s.start, true);
-        player.playVideo();
-      }
-      renderCurrentSentence();
-      highlightTranscriptItem();
-    }
-
-    function prevSentence() {
-      if (currentSentenceIndex > 0) jumpToSentence(currentSentenceIndex - 1);
-    }
-
-    function nextSentence() {
-      const sentences = videoPresets[currentVideoIndex].sentences;
-      if (currentSentenceIndex < sentences.length - 1) jumpToSentence(currentSentenceIndex + 1);
-    }
-
-    function replayCurrent() {
-      jumpToSentence(currentSentenceIndex);
-    }
-
-    function toggleLoop() {
-      isLooping = !isLooping;
-      document.getElementById('loopStatus').innerText = isLooping ? 'Bật' : 'Tắt';
-      document.getElementById('loopBtn').classList.toggle('text-sky-600', isLooping);
-    }
-
-    function toggleAutoPause() {
-      isAutoPause = !isAutoPause;
-      document.getElementById('autoPauseStatus').innerText = isAutoPause ? 'Bật' : 'Tắt';
-      document.getElementById('autoPauseBtn').classList.toggle('text-sky-600', isAutoPause);
-    }
-
-    function toggleBlur() {
-      isBlur = !isBlur;
-      const focusCard = document.getElementById('focusCard');
-      const btn = document.getElementById('blurToggleBtn');
-      if (isBlur) {
-        focusCard.classList.add('blur-mode');
-        btn.classList.add('bg-slate-800', 'text-white');
-      } else {
-        focusCard.classList.remove('blur-mode');
-        btn.classList.remove('bg-slate-800', 'text-white');
-      }
-    }
-
-    function toggleKaraoke() {
-      isKaraoke = !isKaraoke;
-      document.getElementById('karaokeToggleBtn').classList.toggle('bg-sky-50', isKaraoke);
-    }
-
-    function toggleIPA() {
-      showIPA = !showIPA;
-      document.getElementById('ipaToggleBtn').className = showIPA 
-        ? 'px-2.5 py-1.5 rounded-lg border border-sky-300 bg-sky-500 text-white font-bold transition'
-        : 'px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-500 font-bold transition';
-      document.getElementById('subIPA').style.display = showIPA ? 'flex' : 'none';
-    }
-
-    function toggleVI() {
-      showVI = !showVI;
-      document.getElementById('viToggleBtn').className = showVI 
-        ? 'px-2.5 py-1.5 rounded-lg border border-sky-300 bg-sky-500 text-white font-bold transition'
-        : 'px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-500 font-bold transition';
-      document.getElementById('subVietnamese').style.display = showVI ? 'block' : 'none';
-    }
-
-    function cycleFontSize() {
-      currentFontIndex = (currentFontIndex + 1) % fontSizes.length;
-      document.getElementById('subEnglish').className = `serif-text ${fontSizes[currentFontIndex]} font-semibold text-slate-900 tracking-tight leading-snug flex flex-wrap justify-center gap-x-2 gap-y-1`;
-    }
-
-    function toggleAccent() {
-      currentAccent = currentAccent === 'US' ? 'UK' : 'US';
-      document.getElementById('accentLabel').innerText = currentAccent;
-    }
-
-    function setSpeed(rate) {
-      if (player && player.setPlaybackRate) {
-        player.setPlaybackRate(rate);
-        document.getElementById('speedLabel').innerText = rate + 'x';
-        document.getElementById('speedMenu').classList.add('hidden');
-      }
-    }
-
-    function toggleDropdown(id) {
-      document.getElementById(id).classList.toggle('hidden');
-    }
-
-    // ==================== CƠ CHẾ DỊCH TRƯỚC BẰNG GOOGLE TRANSLATE ====================
-    async function translateBatchToVietnamese(texts) {
-      try {
-        const fullText = texts.join('\n');
-        const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=vi&dt=t&q=${encodeURIComponent(fullText)}`);
-        const data = await res.json();
-        const translatedFull = data[0].map(item => item[0]).join('');
-        return translatedFull.split('\n');
-      } catch (err) {
-        return texts;
-      }
-    }
-
-    async function openDict(word, ipa, vi) {
-      currentPopupWord = word;
-      document.getElementById('dictWord').innerText = word;
-      document.getElementById('dictIpa').innerText = ipa;
-      document.getElementById('dictMeaning').innerText = 'Đang tra cứu...';
-      openModal('dictModal');
-      speakWord(word);
-
-      try {
-        const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=vi&dt=t&q=${encodeURIComponent(word)}`);
-        const data = await res.json();
-        document.getElementById('dictMeaning').innerText = data[0][0][0] || vi;
-      } catch(e) {
-        document.getElementById('dictMeaning').innerText = vi;
-      }
-    }
-
-    function speakWord(word) {
-      if ('speechSynthesis' in window) {
-        const utter = new SpeechSynthesisUtterance(word);
-        utter.lang = currentAccent === 'US' ? 'en-US' : 'en-GB';
-        window.speechSynthesis.speak(utter);
-      }
-    }
-
-    // ==================== TỰ ĐỘNG LẤY PHỤ ĐỀ YOUTUBE QUA PROXY ====================
-    async function handleAutoFetchAndTranslate() {
-      const url = document.getElementById('customYoutubeUrl').value.trim();
-      const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
-
-      if (!match || !match[1]) {
-        alert("Vui lòng nhập đường link YouTube hợp lệ!");
-        return;
-      }
-
-      const videoId = match[1];
-      showStatus("Đang truy xuất thông tin phụ đề từ YouTube...");
-
-      try {
-        // Tải trang YouTube qua Proxy công khai
-        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent('https://www.youtube.com/watch?v=' + videoId)}`;
-        const res = await fetch(proxyUrl);
-        const html = await res.text();
-
-        // Tìm danh sách Caption Tracks trong mã nguồn trang
-        const regex = /"captionTracks":\s*(\[.*?\])/;
-        const matchCaptions = html.match(regex);
-
-        if (!matchCaptions) {
-          throw new Error("Video này không có phụ đề tiếng Anh có sẵn trên YouTube. Mày hãy tải file .srt lên ở ô dự phòng nhé!");
-        }
-
-        const captions = JSON.parse(matchCaptions[1]);
-        // Ưu tiên phụ đề tiếng Anh
-        const enTrack = captions.find(c => c.languageCode === 'en' || c.vssId?.includes('.en')) || captions[0];
-
-        showStatus("Đã tìm thấy phụ đề, đang tải dữ liệu...");
-        const trackRes = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(enTrack.baseUrl)}`);
-        const xmlText = await trackRes.text();
-
-        // Bóc tách XML của YouTube timedtext
-        const parser = new DOMParser();
-        const xmlDoc = parser.parseFromString(xmlText, "text/xml");
-        const textNodes = xmlDoc.getElementsByTagName("text");
-
-        if (textNodes.length === 0) {
-          throw new Error("Không thể bóc tách nội dung phụ đề từ video này.");
-        }
-
-        let rawList = [];
-        for (let i = 0; i < textNodes.length; i++) {
-          const node = textNodes[i];
-          const start = parseFloat(node.getAttribute("start") || "0");
-          const dur = parseFloat(node.getAttribute("dur") || "3");
-          const text = decodeHTMLEntities(node.textContent.trim());
-          if (text) {
-            rawList.push({ start, end: start + dur, text });
-          }
-        }
-
-        // Tự động gộp câu tự nhiên (tránh ngắt vụn từng từ)
-        let mergedSentences = mergeShortSegments(rawList);
-
-        showStatus(`Đang dịch trước toàn bộ ${mergedSentences.length} câu sang tiếng Việt...`);
-        const englishTexts = mergedSentences.map(s => s.text);
-        const viTranslations = await translateBatchToVietnamese(englishTexts);
-
-        // Gán bản dịch tiếng Việt vào danh sách câu
-        mergedSentences.forEach((s, idx) => {
-          s.id = idx + 1;
-          s.vi = viTranslations[idx] || s.text;
-          s.context = "Phụ đề YouTube tự động";
-        });
-
-        // Nạp vào danh sách và chạy video
-        videoPresets.push({
-          videoId: videoId,
-          title: `Video YouTube (${videoId})`,
-          sentences: mergedSentences
-        });
-
-        hideStatus();
-        closeModal('addVideoModal');
-        loadPresetVideo(videoPresets.length - 1);
-
-      } catch (err) {
-        hideStatus();
-        alert(err.message || "Có lỗi khi lấy phụ đề. Hãy thử dùng ô tải file .srt nhé!");
-      }
-    }
-
-    // ==================== TẢI FILE .SRT TRỰC TIẾP ====================
-    async function handleSrtFileUpload(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const url = document.getElementById('customYoutubeUrl').value.trim();
-      const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
-      const videoId = match ? match[1] : "LpUh8nUzRL8";
-
-      showStatus("Đang đọc file .srt và dịch sang tiếng Việt...");
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        const content = e.target.result;
-        const parsed = parseSRT(content);
-
-        if (parsed.length === 0) {
-          hideStatus();
-          alert("File .srt không hợp lệ hoặc không có dữ liệu!");
-          return;
-        }
-
-        const englishTexts = parsed.map(p => p.text);
-        const viTranslations = await translateBatchToVietnamese(englishTexts);
-
-        parsed.forEach((s, idx) => {
-          s.id = idx + 1;
-          s.vi = viTranslations[idx] || s.text;
-          s.context = "File .srt từ máy tính";
-        });
-
-        videoPresets.push({
-          videoId: videoId,
-          title: file.name.replace(/\.[^/.]+$/, ""),
-          sentences: parsed
-        });
-
-        hideStatus();
-        closeModal('addVideoModal');
-        loadPresetVideo(videoPresets.length - 1);
-      };
-      reader.readAsText(file);
-    }
-
-    // Bộ giải mã file .SRT chuẩn xác
-    function parseSRT(data) {
-      const regex = /(\d+)\r?\n(\d{2}:\d{2}:\d{2}[,\.]\d{3}) --> (\d{2}:\d{2}:\d{2}[,\.]\d{3})\r?\n([\s\S]*?)(?=\r?\n\r?\n|\r?\n$\vert{}$)/g;
-      let matches;
-      let result = [];
-
-      while ((matches = regex.exec(data)) !== null) {
-        const start = srtTimeToSeconds(matches[2]);
-        const end = srtTimeToSeconds(matches[3]);
-        const text = matches[4].replace(/\r?\n/g, ' ').replace(/<[^>]*>/g, '').trim();
-        if (text) {
-          result.push({ start, end, text });
-        }
-      }
-      return result;
-    }
-
-    function srtTimeToSeconds(timeString) {
-      const parts = timeString.replace(',', '.').split(':');
-      return parseFloat(parts[0]) * 3600 + parseFloat(parts[1]) * 60 + parseFloat(parts[2]);
-    }
-
-    // Tự động gộp các đoạn quá ngắn thành câu tự nhiên
-    function mergeShortSegments(list) {
-      let merged = [];
-      let cur = null;
-
-      for (let item of list) {
-        if (!cur) {
-          cur = { ...item };
-        } else {
-          const endsWithPunctuation = /[.!?]$/.test(cur.text);
-          const duration = item.end - cur.start;
-
-          if (!endsWithPunctuation && duration < 6.0) {
-            cur.text += ' ' + item.text;
-            cur.end = item.end;
-          } else {
-            merged.push(cur);
-            cur = { ...item };
-          }
-        }
-      }
-      if (cur) merged.push(cur);
-      return merged;
-    }
-
-    function decodeHTMLEntities(str) {
-      const doc = new DOMParser().parseFromString(str, 'text/html');
-      return doc.body.textContent || "";
-    }
-
-    function showStatus(text) {
-      document.getElementById('fetchStatusBox').classList.remove('hidden');
-      document.getElementById('fetchStatusText').innerText = text;
-      document.getElementById('submitVideoBtn').disabled = true;
-    }
-
-    function hideStatus() {
-      document.getElementById('fetchStatusBox').classList.add('hidden');
-      document.getElementById('submitVideoBtn').disabled = false;
-    }
-
-    function loadPresetVideo(index) {
-      currentVideoIndex = index;
-      currentSentenceIndex = 0;
-      const video = videoPresets[index];
-      document.getElementById('currentVideoBadge').innerText = video.videoId;
-      document.getElementById('currentVideoTitle').innerText = video.title;
-      loadVideoPlayer(video.videoId);
-      renderCurrentSentence();
-      renderTranscriptList();
-      closeModal('addVideoModal');
-    }
-
-    function filterTranscript() {
-      const query = document.getElementById('searchInput').value.toLowerCase();
-      const sentences = videoPresets[currentVideoIndex].sentences;
-      sentences.forEach((s, idx) => {
-        const el = document.getElementById(`trans-item-${idx}`);
-        if (!el) return;
-        const match = s.text.toLowerCase().includes(query) || s.vi.toLowerCase().includes(query);
-        el.style.display = match ? 'flex' : 'none';
-      });
-    }
-
-    function openModal(id) {
-      document.getElementById(id).classList.remove('hidden');
-    }
-
-    function closeModal(id) {
-      document.getElementById(id).classList.add('hidden');
-    }
-  </script>
-
-  <!-- YouTube Iframe API -->
-  <script src="https://www.youtube.com/iframe_api"></script>
+layThoiTiet();
+</script>
 </body>
 </html>
