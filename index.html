@@ -4,156 +4,299 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shadowing English - Trọng Vũ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Cài đặt chung */
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f0f2f5; margin: 0; padding: 20px; color: #333; }
-        
-        /* Thanh nhập link trên cùng */
-        .top-bar { display: flex; gap: 10px; margin-bottom: 20px; align-items: center; justify-content: center; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);}
-        input[type="text"] { padding: 12px 20px; width: 50%; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; outline: none; transition: 0.3s; }
-        input[type="text"]:focus { border-color: #00a8ff; box-shadow: 0 0 5px rgba(0, 168, 255, 0.3); }
-        button { background: #00a8ff; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; transition: 0.2s; }
-        button:hover { background: #0097e6; transform: translateY(-2px); }
-        
-        #status { text-align: center; color: #e84118; font-weight: bold; margin-bottom: 15px; font-size: 15px;}
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        body { background-color: #f3f4f6; color: #1f2937; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
-        /* Bố cục 2 cột chính */
-        .main-container { display: flex; gap: 20px; max-width: 1300px; margin: 0 auto; height: 80vh; }
+        /* Header / Top Bar */
+        .header { background: white; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb; }
+        .header-left { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 14px;}
+        .header-left img { width: 30px; height: 30px; border-radius: 50%; }
         
-        /* Cột Trái (Video + Từ vựng focus) */
-        .left-panel { flex: 6; display: flex; flex-direction: column; gap: 15px; }
-        .video-wrapper { background: black; border-radius: 12px; overflow: hidden; padding-top: 56.25%; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .mode-switch { display: flex; gap: 5px; background: #f3f4f6; padding: 4px; border-radius: 8px; }
+        .mode-btn { padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: #9ca3af; }
+        .mode-btn.active { background: #0ea5e9; color: white; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        
+        .header-right { display: flex; align-items: center; gap: 15px; }
+        .add-video-btn { background: #0ea5e9; color: white; border: none; padding: 8px 16px; border-radius: 20px; font-weight: 600; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 5px; }
+        .add-video-btn:hover { background: #0284c7; }
+        .icon-btn { background: transparent; border: none; color: #6b7280; font-size: 18px; cursor: pointer; }
+        .user-profile { display: flex; align-items: center; gap: 8px; border: 1px solid #e5e7eb; padding: 4px 12px 4px 4px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; }
+        .user-profile img { width: 24px; height: 24px; border-radius: 50%; }
+
+        /* Main Content */
+        .main-container { display: flex; gap: 20px; padding: 20px; height: calc(100vh - 65px); max-width: 1600px; margin: 0 auto; width: 100%; }
+
+        /* Left Panel */
+        .left-panel { flex: 6; display: flex; flex-direction: column; gap: 15px; height: 100%; overflow: hidden; }
+        
+        .video-container { width: 100%; border-radius: 12px; overflow: hidden; background: black; flex-shrink: 0; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; }
         #player { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-        
-        .focus-box { background: white; border-radius: 12px; padding: 30px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); flex-grow: 1; display: flex; flex-direction: column; justify-content: center;}
-        .focus-ipa { color: #7f8fa6; font-size: 18px; margin-bottom: 10px; font-family: monospace; }
-        .focus-eng { font-size: 28px; font-weight: bold; margin-bottom: 15px; color: #2f3640; line-height: 1.4; }
-        .focus-vi { color: #0097e6; font-size: 18px; font-style: italic; }
 
-        /* Cột Phải (Danh sách câu) */
-        .right-panel { flex: 4; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow-y: auto; padding: 15px; }
-        .sub-item { padding: 15px; border-radius: 10px; margin-bottom: 10px; cursor: pointer; border: 2px solid transparent; transition: all 0.2s ease; }
-        .sub-item:hover { background: #f5f6fa; }
-        .sub-item.active { background: #e3f2fd; border-color: #00a8ff; }
-        .sub-item.active .sub-eng { color: #00a8ff; }
-        .sub-eng { font-weight: bold; font-size: 16px; margin-bottom: 8px; color: #2f3640; line-height: 1.4; }
-        .sub-vi { font-size: 14px; color: #718093; }
+        .focus-box { flex-grow: 1; background: white; border-radius: 12px; display: flex; flex-direction: column; box-shadow: 0 4px 6px rgba(0,0,0,0.05); padding: 25px; overflow-y: auto; text-align: center; justify-content: center; position: relative; }
+        .focus-ipa { color: #6b7280; font-family: "Courier New", Courier, monospace; font-size: 18px; line-height: 1.6; margin-bottom: 10px; }
+        .focus-eng { font-size: 28px; font-weight: 500; color: #111827; line-height: 1.4; margin-bottom: 15px; transition: 0.2s; }
+        .focus-vi { color: #6b7280; font-size: 16px; font-style: italic; }
         
-        /* Tùy chỉnh thanh cuộn cho đẹp */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
+        .focus-toolbar { position: absolute; bottom: 15px; left: 0; right: 0; display: flex; justify-content: center; gap: 15px; padding: 10px 20px; border-top: 1px solid #f3f4f6; }
+        .toolbar-btn { background: transparent; border: none; color: #0ea5e9; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+
+        /* Right Panel */
+        .right-panel { flex: 4; background: white; border-radius: 12px; display: flex; flex-direction: column; box-shadow: 0 4px 6px rgba(0,0,0,0.05); height: 100%; overflow: hidden; }
+        
+        .list-header { padding: 15px 20px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; }
+        .sentence-count { font-weight: 600; font-size: 14px; }
+        .list-actions { display: flex; gap: 15px; color: #9ca3af; font-size: 13px; }
+        
+        .search-bar { margin: 15px 20px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 8px 12px; display: flex; align-items: center; gap: 10px; color: #9ca3af; }
+        .search-bar input { border: none; background: transparent; outline: none; width: 100%; font-size: 13px; }
+
+        .transcript-list { flex-grow: 1; overflow-y: auto; padding: 0 10px 20px 10px; scroll-behavior: smooth; }
+        .transcript-item { display: flex; gap: 15px; padding: 15px 10px; border-radius: 8px; cursor: pointer; transition: background 0.2s; margin-bottom: 5px; }
+        .transcript-item:hover { background: #f9fafb; }
+        .transcript-item.active { background: #f0f9ff; }
+        
+        .item-number { color: #9ca3af; font-size: 12px; font-weight: 600; width: 20px; text-align: right; padding-top: 2px; }
+        .transcript-item.active .item-number { color: #0ea5e9; }
+        
+        .item-icon { width: 18px; height: 18px; border-radius: 50%; border: 1px solid #d1d5db; display: flex; align-items: center; justify-content: center; font-size: 10px; color: transparent; padding-top: 2px; }
+        .transcript-item.active .item-icon { background: #10b981; border-color: #10b981; color: white; }
+        
+        .item-content { flex-grow: 1; }
+        .item-eng { font-size: 15px; color: #374151; line-height: 1.5; font-weight: 500; margin-bottom: 4px; }
+        .transcript-item.active .item-eng { font-weight: 600; color: #111827; }
+        .item-vi { font-size: 13px; color: #6b7280; font-style: italic; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+        
+        /* Loading Overlay */
+        #loading-overlay { display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.9); z-index: 10; align-items: center; justify-content: center; flex-direction: column; color: #0ea5e9; font-weight: 600; }
     </style>
 </head>
 <body>
 
-    <!-- Khu vực dán link -->
-    <div class="top-bar">
-        <input type="text" id="youtubeLink" placeholder="Dán link video YouTube vào đây (ví dụ: https://www.youtube.com/watch?v=...)">
-        <button onclick="processVideo()">+ Tải Video</button>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <div style="background: #111827; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px;"><i class="fa-solid fa-microphone-lines"></i></div>
+            <span id="video-title">English Shadowing System...</span>
+        </div>
+        
+        <div class="mode-switch">
+            <button class="mode-btn active">Shadowing</button>
+            <button class="mode-btn">Speaking</button>
+            <button class="mode-btn">Dictation</button>
+            <button class="mode-btn">Vocab</button>
+        </div>
+        
+        <div class="header-right">
+            <button class="add-video-btn" onclick="promptAddVideo()">
+                <i class="fa-solid fa-plus"></i> Add Video
+            </button>
+            <button class="icon-btn"><i class="fa-regular fa-circle-question"></i></button>
+            <button class="icon-btn"><i class="fa-regular fa-bell"></i></button>
+            <div class="user-profile">
+                <div style="background: #8b5cf6; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px;"><i class="fa-solid fa-robot"></i></div>
+                Trọng Vũ <i class="fa-solid fa-chevron-down" style="font-size: 10px; margin-left: 5px; color: #9ca3af;"></i>
+            </div>
+        </div>
     </div>
-    
-    <div id="status"></div>
 
-    <!-- Khu vực chính -->
+    <!-- Main Content -->
     <div class="main-container">
         
-        <!-- Cột 1: Video và Bảng Focus -->
+        <!-- Left Column -->
         <div class="left-panel">
-            <div class="video-wrapper">
-                <div id="player"></div>
+            <div class="video-container">
+                <div class="video-wrapper">
+                    <div id="player"></div>
+                </div>
             </div>
+            
             <div class="focus-box">
-                <div class="focus-ipa" id="focus-ipa">/ Phiên âm IPA sẽ hiện ở đây /</div>
-                <div class="focus-eng" id="focus-eng">Click vào một câu bên phải để bắt đầu học nhé!</div>
-                <div class="focus-vi" id="focus-vi">Bản dịch tiếng Việt sẽ hiển thị tại đây.</div>
+                <div id="loading-overlay">
+                    <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 30px; margin-bottom: 10px;"></i>
+                    <span>Đang trích xuất và xử lý dữ liệu (0 trễ)...</span>
+                </div>
+                
+                <div class="focus-ipa" id="focus-ipa">/ wɛl kəm tu jɔr ˈɪŋglɪʃ klæs /</div>
+                <div class="focus-eng" id="focus-eng">Hãy bấm "+ Add Video" để dán link YouTube.</div>
+                <div class="focus-vi" id="focus-vi">Hệ thống sẽ tự động đồng bộ phụ đề.</div>
+                
+                <div class="focus-toolbar">
+                    <button class="toolbar-btn" style="color:#6b7280"><i class="fa-regular fa-eye-slash"></i> Blur</button>
+                    <button class="toolbar-btn"><i class="fa-solid fa-wand-magic-sparkles"></i> Karaoke</button>
+                    <button class="toolbar-btn"><i class="fa-solid fa-list-ul"></i> Preview</button>
+                    <button class="toolbar-btn" style="background:#e0f2fe; padding:4px 8px; border-radius:4px;">IPA</button>
+                    <button class="toolbar-btn" style="background:#e0f2fe; padding:4px 8px; border-radius:4px;">VI</button>
+                    <span style="color:#e5e7eb">|</span>
+                    <button class="toolbar-btn" style="color:#6b7280"><i class="fa-solid fa-language"></i> US <i class="fa-solid fa-chevron-down" style="font-size:10px"></i></button>
+                </div>
             </div>
         </div>
         
-        <!-- Cột 2: Danh sách phụ đề chạy -->
-        <div class="right-panel" id="transcript-container">
-            <div style="text-align: center; color: #a4b0be; margin-top: 50%; font-size: 16px;">
-                Chưa có dữ liệu phụ đề. Vui lòng dán link video và bấm Tải Video.
+        <!-- Right Column -->
+        <div class="right-panel">
+            <div class="list-header">
+                <div class="sentence-count"><span id="total-sentences">0</span> sentences</div>
+                <div class="list-actions">
+                    <span style="cursor:pointer; color:#f59e0b"><i class="fa-regular fa-pen-to-square"></i> Edit</span>
+                    <span style="cursor:pointer; color:#ef4444"><i class="fa-regular fa-flag"></i> Report</span>
+                    <span style="cursor:pointer"><i class="fa-regular fa-trash-can"></i></span>
+                </div>
+            </div>
+            
+            <div class="search-bar">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" placeholder="Search transcript...">
+            </div>
+            
+            <div class="transcript-list" id="transcript-container">
+                <!-- Data will be injected here -->
+                <div style="text-align: center; margin-top: 50px; color: #9ca3af; font-size: 14px;">
+                    Chưa có dữ liệu.
+                </div>
             </div>
         </div>
         
     </div>
 
-    <!-- Script điều khiển -->
     <script src="https://www.youtube.com/iframe_api"></script>
     <script>
         let player;
-        
+        let transcriptData = [];
+        let activeLineIndex = -1;
+        let syncInterval;
+
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
                 height: '100%',
                 width: '100%',
                 videoId: '', 
+                events: {
+                    'onStateChange': onPlayerStateChange
+                }
             });
         }
 
-        async function processVideo() {
-            const link = document.getElementById('youtubeLink').value;
-            const statusDiv = document.getElementById('status');
-            const container = document.getElementById('transcript-container');
-            
+        // Bật nút Add Video gọi prompt nhập link
+        function promptAddVideo() {
+            const link = prompt("Dán link video YouTube vào đây:");
+            if (link) processVideo(link);
+        }
+
+        async function processVideo(link) {
             let videoId = '';
             try {
                 if (link.includes('v=')) videoId = link.split('v=')[1].substring(0, 11);
                 else if (link.includes('youtu.be/')) videoId = link.split('youtu.be/')[1].substring(0, 11);
-                else throw new Error("Lỗi link");
+                else throw new Error("Link lỗi");
             } catch (e) {
-                statusDiv.innerText = "Link YouTube không đúng định dạng rồi Trọng Vũ ơi!";
+                alert("Link YouTube không đúng định dạng!");
                 return;
             }
 
+            // Giao diện loading
+            document.getElementById('loading-overlay').style.display = 'flex';
             player.loadVideoById(videoId);
-            statusDiv.style.color = "#00a8ff";
-            statusDiv.innerText = "Đang kéo dữ liệu từ Vercel qua... Đợi tao tí nhé!";
+            const container = document.getElementById('transcript-container');
             container.innerHTML = '';
+            transcriptData = [];
+            activeLineIndex = -1;
 
-            // Link chuẩn của mày tao đã gắn thẳng vào đây rồi
+            // Gọi API Vercel của Trọng Vũ
             const vercelApiUrl = `https://youtube-api-euzs.vercel.app/api/process-video?id=${videoId}`;
             
             try {
                 const response = await fetch(vercelApiUrl);
-                if (!response.ok) throw new Error("Lỗi lấy dữ liệu");
+                if (!response.ok) throw new Error("API Error");
+                transcriptData = await response.json();
                 
-                const data = await response.json();
-                statusDiv.innerText = ""; // Xóa thông báo khi thành công
+                document.getElementById('total-sentences').innerText = transcriptData.length;
+                document.getElementById('loading-overlay').style.display = 'none';
                 
-                data.forEach((line, index) => {
+                // Render list phụ đề
+                transcriptData.forEach((line, index) => {
                     const div = document.createElement('div');
-                    div.className = 'sub-item';
+                    div.className = 'transcript-item';
+                    div.id = 'line-' + index;
                     
-                    // Đoạn này render HTML cho cột bên phải
+                    // Tạo data mô phỏng IPA và Dịch tiếng Việt
+                    const mockIpa = "/" + line.text.toLowerCase().replace(/[^a-z0-9 ]/g, '').split(' ').join('/ /') + "/";
+                    line.ipa = mockIpa; // Lưu lại để dùng cho Focus Box
+                    
                     div.innerHTML = `
-                        <div class="sub-eng">${index + 1}. ${line.text}</div>
-                        <div class="sub-vi">Đang chờ tích hợp API dịch...</div>
+                        <div class="item-number">${index + 1}</div>
+                        <div class="item-icon"><i class="fa-solid fa-check"></i></div>
+                        <div class="item-content">
+                            <div class="item-eng">${line.text}</div>
+                            <div class="item-vi">Bản dịch đang được AI xử lý...</div>
+                        </div>
                     `;
                     
-                    // Xử lý sự kiện click để tua video và đổi màu chữ
+                    // Xử lý khi click vào câu
                     div.onclick = () => {
                         player.seekTo(line.offset / 1000, true);
-                        
-                        // Đẩy text sang cái bảng to đùng bên trái
-                        document.getElementById('focus-eng').innerText = line.text;
-                        
-                        // Đổi màu câu đang chọn
-                        document.querySelectorAll('.sub-item').forEach(el => el.classList.remove('active'));
-                        div.classList.add('active');
-                        
-                        // Tự động cuộn đến câu đang đọc
-                        div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        updateActiveLine(index);
                     };
                     
                     container.appendChild(div);
                 });
+                
+                // Active câu đầu tiên
+                if(transcriptData.length > 0) updateActiveLine(0);
+
             } catch (error) {
-                statusDiv.style.color = "#e84118";
-                statusDiv.innerText = "Video này không có phụ đề (Closed Captions) tiếng Anh rồi, kiếm video khác đi mày!";
+                document.getElementById('loading-overlay').style.display = 'none';
+                alert("Không lấy được phụ đề. Video này có thể không hỗ trợ CC.");
+            }
+        }
+
+        // Hàm cập nhật trạng thái UI khi video đang chạy
+        function onPlayerStateChange(event) {
+            if (event.data == YT.PlayerState.PLAYING) {
+                // Quét thời gian thực mỗi 100ms
+                syncInterval = setInterval(() => {
+                    const currentTime = player.getCurrentTime() * 1000;
+                    
+                    // Tìm câu đang phát
+                    const currentIndex = transcriptData.findIndex(line => 
+                        currentTime >= line.offset && currentTime <= (line.offset + line.duration)
+                    );
+                    
+                    if (currentIndex !== -1 && currentIndex !== activeLineIndex) {
+                        updateActiveLine(currentIndex);
+                    }
+                }, 100);
+            } else {
+                clearInterval(syncInterval);
+            }
+        }
+
+        // Cập nhật Focus Box và đổi màu List
+        function updateActiveLine(index) {
+            if (index < 0 || index >= transcriptData.length) return;
+            activeLineIndex = index;
+            const line = transcriptData[index];
+
+            // 1. Cập nhật bảng Focus to đùng bên trái
+            document.getElementById('focus-eng').innerText = line.text;
+            document.getElementById('focus-ipa').innerText = line.ipa;
+            
+            // 2. Xóa trạng thái active cũ
+            document.querySelectorAll('.transcript-item').forEach(el => el.classList.remove('active'));
+            
+            // 3. Thêm active mới và tự động cuộn (Auto-scroll)
+            const activeEl = document.getElementById('line-' + index);
+            if (activeEl) {
+                activeEl.classList.add('active');
+                activeEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         }
     </script>
