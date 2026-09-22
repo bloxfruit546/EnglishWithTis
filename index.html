@@ -9,11 +9,8 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
         body { background-color: #f3f4f6; color: #1f2937; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
-        /* Header / Top Bar */
         .header { background: white; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb; }
         .header-left { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 14px;}
-        .header-left img { width: 30px; height: 30px; border-radius: 50%; }
-        
         .mode-switch { display: flex; gap: 5px; background: #f3f4f6; padding: 4px; border-radius: 8px; }
         .mode-btn { padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: #9ca3af; }
         .mode-btn.active { background: #0ea5e9; color: white; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
@@ -25,12 +22,9 @@
         .user-profile { display: flex; align-items: center; gap: 8px; border: 1px solid #e5e7eb; padding: 4px 12px 4px 4px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; }
         .user-profile img { width: 24px; height: 24px; border-radius: 50%; }
 
-        /* Main Content */
         .main-container { display: flex; gap: 20px; padding: 20px; height: calc(100vh - 65px); max-width: 1600px; margin: 0 auto; width: 100%; }
 
-        /* Left Panel */
         .left-panel { flex: 6; display: flex; flex-direction: column; gap: 15px; height: 100%; overflow: hidden; }
-        
         .video-container { width: 100%; border-radius: 12px; overflow: hidden; background: black; flex-shrink: 0; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; }
         #player { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
@@ -43,9 +37,7 @@
         .focus-toolbar { position: absolute; bottom: 15px; left: 0; right: 0; display: flex; justify-content: center; gap: 15px; padding: 10px 20px; border-top: 1px solid #f3f4f6; }
         .toolbar-btn { background: transparent; border: none; color: #0ea5e9; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; }
 
-        /* Right Panel */
         .right-panel { flex: 4; background: white; border-radius: 12px; display: flex; flex-direction: column; box-shadow: 0 4px 6px rgba(0,0,0,0.05); height: 100%; overflow: hidden; }
-        
         .list-header { padding: 15px 20px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; }
         .sentence-count { font-weight: 600; font-size: 14px; }
         .list-actions { display: flex; gap: 15px; color: #9ca3af; font-size: 13px; }
@@ -69,13 +61,11 @@
         .transcript-item.active .item-eng { font-weight: 600; color: #111827; }
         .item-vi { font-size: 13px; color: #6b7280; font-style: italic; }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
         
-        /* Loading Overlay */
         #loading-overlay { display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.9); z-index: 10; align-items: center; justify-content: center; flex-direction: column; color: #0ea5e9; font-weight: 600; }
     </style>
 </head>
@@ -110,8 +100,6 @@
 
     <!-- Main Content -->
     <div class="main-container">
-        
-        <!-- Left Column -->
         <div class="left-panel">
             <div class="video-container">
                 <div class="video-wrapper">
@@ -141,7 +129,6 @@
             </div>
         </div>
         
-        <!-- Right Column -->
         <div class="right-panel">
             <div class="list-header">
                 <div class="sentence-count"><span id="total-sentences">0</span> sentences</div>
@@ -158,13 +145,11 @@
             </div>
             
             <div class="transcript-list" id="transcript-container">
-                <!-- Data will be injected here -->
                 <div style="text-align: center; margin-top: 50px; color: #9ca3af; font-size: 14px;">
                     Chưa có dữ liệu.
                 </div>
             </div>
         </div>
-        
     </div>
 
     <script src="https://www.youtube.com/iframe_api"></script>
@@ -185,7 +170,6 @@
             });
         }
 
-        // Bật nút Add Video gọi prompt nhập link
         function promptAddVideo() {
             const link = prompt("Dán link video YouTube vào đây:");
             if (link) processVideo(link);
@@ -202,34 +186,43 @@
                 return;
             }
 
-            // Giao diện loading
-            document.getElementById('loading-overlay').style.display = 'flex';
-            player.loadVideoById(videoId);
+            const loadingOverlay = document.getElementById('loading-overlay');
             const container = document.getElementById('transcript-container');
+            
+            loadingOverlay.style.display = 'flex';
             container.innerHTML = '';
+            
+            try {
+                if (player && player.loadVideoById) {
+                    player.loadVideoById(videoId);
+                }
+            } catch(e) {
+                console.log("Player chưa sẵn sàng");
+            }
+            
             transcriptData = [];
             activeLineIndex = -1;
 
-            // Gọi API Vercel của Trọng Vũ
             const vercelApiUrl = `https://youtube-api-euzs.vercel.app/api/process-video?id=${videoId}`;
             
             try {
                 const response = await fetch(vercelApiUrl);
-                if (!response.ok) throw new Error("API Error");
+                if (!response.ok) throw new Error("Server Vercel báo lỗi mạng.");
+                
                 transcriptData = await response.json();
                 
+                if(transcriptData.error) throw new Error(transcriptData.error);
+                if(transcriptData.length === 0) throw new Error("Video này hoàn toàn không có dữ liệu phụ đề.");
+
                 document.getElementById('total-sentences').innerText = transcriptData.length;
-                document.getElementById('loading-overlay').style.display = 'none';
                 
-                // Render list phụ đề
                 transcriptData.forEach((line, index) => {
                     const div = document.createElement('div');
                     div.className = 'transcript-item';
                     div.id = 'line-' + index;
                     
-                    // Tạo data mô phỏng IPA và Dịch tiếng Việt
                     const mockIpa = "/" + line.text.toLowerCase().replace(/[^a-z0-9 ]/g, '').split(' ').join('/ /') + "/";
-                    line.ipa = mockIpa; // Lưu lại để dùng cho Focus Box
+                    line.ipa = mockIpa;
                     
                     div.innerHTML = `
                         <div class="item-number">${index + 1}</div>
@@ -240,7 +233,6 @@
                         </div>
                     `;
                     
-                    // Xử lý khi click vào câu
                     div.onclick = () => {
                         player.seekTo(line.offset / 1000, true);
                         updateActiveLine(index);
@@ -249,23 +241,27 @@
                     container.appendChild(div);
                 });
                 
-                // Active câu đầu tiên
                 if(transcriptData.length > 0) updateActiveLine(0);
+                
+                loadingOverlay.style.display = 'none';
 
             } catch (error) {
-                document.getElementById('loading-overlay').style.display = 'none';
-                alert("Không lấy được phụ đề. Video này có thể không hỗ trợ CC.");
+                loadingOverlay.style.display = 'none';
+                document.getElementById('total-sentences').innerText = "0";
+                
+                container.innerHTML = `<div style="text-align: center; margin-top: 50px; color: #ef4444; font-size: 14px; padding: 20px;">
+                    <i class="fa-solid fa-triangle-exclamation" style="font-size: 30px; margin-bottom: 10px;"></i><br>
+                    <b>Không thể tải phụ đề!</b><br>
+                    Chi tiết: ${error.message}<br><br>
+                    (Video này có thể đã bị tắt tính năng phụ đề rời, hãy thử dán một link TED Talk khác xem sao nhé)
+                </div>`;
             }
         }
 
-        // Hàm cập nhật trạng thái UI khi video đang chạy
         function onPlayerStateChange(event) {
             if (event.data == YT.PlayerState.PLAYING) {
-                // Quét thời gian thực mỗi 100ms
                 syncInterval = setInterval(() => {
                     const currentTime = player.getCurrentTime() * 1000;
-                    
-                    // Tìm câu đang phát
                     const currentIndex = transcriptData.findIndex(line => 
                         currentTime >= line.offset && currentTime <= (line.offset + line.duration)
                     );
@@ -279,20 +275,16 @@
             }
         }
 
-        // Cập nhật Focus Box và đổi màu List
         function updateActiveLine(index) {
             if (index < 0 || index >= transcriptData.length) return;
             activeLineIndex = index;
             const line = transcriptData[index];
 
-            // 1. Cập nhật bảng Focus to đùng bên trái
             document.getElementById('focus-eng').innerText = line.text;
             document.getElementById('focus-ipa').innerText = line.ipa;
             
-            // 2. Xóa trạng thái active cũ
             document.querySelectorAll('.transcript-item').forEach(el => el.classList.remove('active'));
             
-            // 3. Thêm active mới và tự động cuộn (Auto-scroll)
             const activeEl = document.getElementById('line-' + index);
             if (activeEl) {
                 activeEl.classList.add('active');
