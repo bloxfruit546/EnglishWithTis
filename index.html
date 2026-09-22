@@ -1,88 +1,108 @@
-<!-- file: index.html -->
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web Học Tiếng Anh Trọng Vũ</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        #input-section { margin-bottom: 20px; }
+        input[type="text"] { width: 70%; padding: 10px; font-size: 16px; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 5px;}
+        #player { width: 100%; aspect-ratio: 16/9; background: #000; margin-bottom: 20px; }
+        .subtitle-line { padding: 10px; border-bottom: 1px solid #eee; cursor: pointer; transition: background 0.2s; }
+        .subtitle-line:hover { background: #f0f8ff; }
+        .ipa-text { color: #666; font-size: 0.9em; margin-bottom: 5px; }
+        .eng-text { font-weight: bold; font-size: 1.1em; margin-bottom: 5px; }
+    </style>
 </head>
 <body>
+
+    <h2>Hệ thống học Tiếng Anh qua YouTube</h2>
+    
+    <div id="input-section">
+        <input type="text" id="youtubeLink" placeholder="Dán link YouTube vào đây (VD: https://www.youtube.com/watch?v=...)">
+        <button onclick="processVideo()">Tải Video & Phụ đề</button>
+    </div>
+
     <!-- Khung chứa video YouTube -->
     <div id="player"></div>
     
-    <input type="text" id="youtubeLink" placeholder="Dán link YouTube vào đây">
-    <button onclick="processVideo()">Phân tích & Tải dữ liệu</button>
-    
-    <!-- Khung chứa phụ đề như trong ảnh -->
+    <!-- Nơi hiển thị thông báo trạng thái -->
+    <div id="status" style="color: red; margin-bottom: 10px;"></div>
+
+    <!-- Khung chứa phụ đề -->
     <div id="transcript-container"></div>
 
+    <!-- Script điều khiển video YouTube -->
+    <script src="https://www.youtube.com/iframe_api"></script>
     <script>
-        // 1. Nhúng YouTube IFrame API để điều khiển video
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-        var player;
+        let player;
+        
+        // Khởi tạo khung video YouTube
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
                 height: '390',
-                width: '640',
-                videoId: '', // Sẽ load khi dán link
-                events: {
-                    'onStateChange': onPlayerStateChange
-                }
+                width: '100%',
+                videoId: '', 
             });
         }
 
-        // 2. Hàm xử lý khi mày bấm nút kéo link
+        // Hàm xử lý khi bấm nút "Tải Video & Phụ đề"
         async function processVideo() {
             const link = document.getElementById('youtubeLink').value;
-            // Tách ID video từ link (code đơn giản hóa)
-            const videoId = link.split('v=')[1].substring(0, 11);
-            
-            player.loadVideoById(videoId);
-
-            // Gọi thằng đệ Vercel lấy data pre-processed
-            // Thay bằng link Vercel thật của mày sau khi deploy
-            const vercelApiUrl = `https://ten-du-an-vercel-cua-may.vercel.app/api/process-video?id=${videoId}`;
-            
-            document.getElementById('transcript-container').innerText = "Đang xử lý toàn bộ video... Vui lòng đợi...";
-
-            const response = await fetch(vercelApiUrl);
-            const data = await response.json();
-
-            // LƯU VÀO BỘ NHỚ LOCAL THAY VÌ GỌI LẠI
-            localStorage.setItem(`video_data_${videoId}`, JSON.stringify(data));
-            
-            renderTranscript(data);
-        }
-
-        // 3. Hiển thị ra màn hình giống giao diện mày muốn
-        function renderTranscript(data) {
+            const statusDiv = document.getElementById('status');
             const container = document.getElementById('transcript-container');
-            container.innerHTML = '';
             
-            data.forEach(line => {
-                const p = document.createElement('p');
-                p.innerHTML = `
-                    <strong>${line.text}</strong><br>
-                    <span style="color: gray">${line.ipa}</span><br>
-                    <span style="color: blue">${line.vi_translation}</span>
-                `;
-                // Bấm vào câu nào video nhảy đến đó như trong[cite: 3, 4]
-                p.onclick = () => player.seekTo(line.offset / 1000, true);
-                container.appendChild(p);
-            });
-        }
+            // Lấy ID video từ link
+            let videoId = '';
+            try {
+                if (link.includes('v=')) {
+                    videoId = link.split('v=')[1].substring(0, 11);
+                } else if (link.includes('youtu.be/')) {
+                    videoId = link.split('youtu.be/')[1].substring(0, 11);
+                } else {
+                    throw new Error("Link không hợp lệ");
+                }
+            } catch (e) {
+                statusDiv.innerText = "Vui lòng nhập link YouTube hợp lệ!";
+                return;
+            }
 
-        // 4. Theo dõi thời gian thực để highlight câu (0 trễ)
-        function onPlayerStateChange(event) {
-            if (event.data == YT.PlayerState.PLAYING) {
-                setInterval(() => {
-                    const currentTime = player.getCurrentTime() * 1000;
-                    // Chỗ này mày sẽ viết logic đối chiếu currentTime với line.offset 
-                    // trong localStorage để bôi đen text giống trong video nhé.
-                }, 100);
+            // Đổi video trên khung phát
+            player.loadVideoById(videoId);
+            statusDiv.innerText = "Đang kết nối Vercel để lấy phụ đề... Vui lòng đợi!";
+            container.innerHTML = '';
+
+            // LƯU Ý: THAY ĐƯỜNG LINK VERCEL CỦA MÀY VÀO ĐÂY
+            const vercelApiUrl = `https://youtube-api-euzs.vercel.app/api/process-video?id=${videoId}`;
+            
+            try {
+                // Gọi API để lấy dữ liệu
+                const response = await fetch(vercelApiUrl);
+                if (!response.ok) throw new Error("Không lấy được dữ liệu");
+                
+                const data = await response.json();
+                statusDiv.innerText = "Tải phụ đề thành công! Bấm vào từng câu để tua video.";
+                
+                // Hiển thị phụ đề ra màn hình
+                data.forEach(line => {
+                    const div = document.createElement('div');
+                    div.className = 'subtitle-line';
+                    
+                    div.innerHTML = `
+                        <div class="ipa-text">/đang chờ API tạo IPA.../</div>
+                        <div class="eng-text">${line.text}</div>
+                        <div class="vi-text" style="color: #0066cc;">Bản dịch tiếng Việt đang chờ cập nhật...</div>
+                    `;
+                    
+                    // Bấm vào câu nào, video tua đến đúng thời gian câu đó
+                    div.onclick = () => player.seekTo(line.offset / 1000, true);
+                    
+                    container.appendChild(div);
+                });
+            } catch (error) {
+                statusDiv.innerText = "Lỗi: Video này có thể không có phụ đề (Closed Captions) tiếng Anh.";
             }
         }
     </script>
