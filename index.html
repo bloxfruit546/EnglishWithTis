@@ -1,250 +1,90 @@
+<!-- file: index.html -->
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Học Tiếng Anh Shadowing</title>
-    <style>
-        :root {
-            --primary: #0284c7;
-            --primary-light: #e0f2fe;
-            --bg: #f8fafc;
-            --border: #e2e8f0;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: var(--bg); color: var(--text-main); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
-
-        /* Top Header */
-        header {
-            height: 56px;
-            background: white;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
-            gap: 15px;
-        }
-        .header-left { display: flex; align-items: center; gap: 15px; font-weight: 600; font-size: 15px; }
-        .mode-tags { display: flex; gap: 8px; }
-        .mode-btn {
-            border: 1px solid var(--border);
-            background: white;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            cursor: pointer;
-            color: var(--text-muted);
-        }
-        .mode-btn.active { background: #0ea5e9; color: white; border-color: #0ea5e9; font-weight: 500; }
-        .btn-add { background: #0284c7; color: white; border: none; padding: 7px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; }
-
-        /* Main Workspace */
-        .main-layout { display: flex; flex: 1; height: calc(100vh - 56px); padding: 15px; gap: 15px; }
-
-        /* Cột bên trái: Video + Câu phóng to */
-        .left-col { flex: 6; display: flex; flex-direction: column; gap: 15px; }
-        .video-container {
-            width: 100%;
-            padding-bottom: 50%; /* Tỷ lệ khung hình video */
-            position: relative;
-            background: #000;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-        .video-container iframe, .video-container #player { position: absolute; width: 100%; height: 100%; }
-
-        /* Khung hiển thị câu hiện tại & IPA */
-        .sentence-focus-box {
-            flex: 1;
-            background: white;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-        }
-        .sentence-words { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: flex-end; }
-        .word-unit { display: inline-flex; flex-direction: column; align-items: center; cursor: pointer; }
-        .word-unit:hover .word-text { color: var(--primary); }
-        .ipa-text { font-size: 13px; color: #475569; font-family: monospace; }
-        .word-text { font-size: 24px; font-weight: 600; color: #0f172a; margin-top: 2px; }
-        .word-unit.underline .word-text { border-bottom: 2px solid var(--primary); }
-        
-        .translation-vi { font-size: 16px; color: #334155; margin-top: 15px; font-style: italic; }
-        
-        /* Thanh công cụ dưới câu tập */
-        .focus-toolbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-top: 1px solid #f1f5f9;
-            padding-top: 15px;
-        }
-        .tool-group { display: flex; gap: 8px; }
-        .tool-btn {
-            background: #f8fafc;
-            border: 1px solid var(--border);
-            padding: 5px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            color: #475569;
-        }
-        .tool-btn.active { background: var(--primary-light); color: var(--primary); border-color: #bae6fd; }
-
-        /* Cột bên phải: Danh sách câu */
-        .right-col {
-            flex: 4;
-            background: white;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-        .right-header {
-            padding: 12px 16px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .search-box {
-            padding: 10px 16px;
-            border-bottom: 1px solid #f1f5f9;
-        }
-        .search-box input {
-            width: 100%;
-            padding: 8px 12px;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-            font-size: 13px;
-        }
-        .sentence-list { flex: 1; overflow-y: auto; padding: 10px; }
-        .list-item {
-            display: flex;
-            gap: 12px;
-            padding: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-bottom: 6px;
-            transition: background 0.15s;
-        }
-        .list-item:hover { background-color: #f1f5f9; }
-        .list-item.active { background-color: #eff6ff; border-left: 3px solid var(--primary); }
-        .item-index { font-size: 12px; color: var(--text-muted); font-weight: 600; width: 22px; }
-        .item-content { flex: 1; }
-        .item-en { font-size: 14px; font-weight: 500; color: #0f172a; margin-bottom: 3px; }
-        .item-vi { font-size: 12px; color: var(--text-muted); }
-
-        /* Ẩn các thành phần khi toggle */
-        .hide-ipa .ipa-text { visibility: hidden; }
-        .hide-vi .translation-vi, .hide-vi .item-vi { display: none; }
-    </style>
+    <title>Web Học Tiếng Anh Trọng Vũ</title>
 </head>
 <body>
-
-    <!-- Header -->
-    <header>
-        <div class="header-left">
-            <span id="video-title">5 Practical Ways to Take Control of Your Life</span>
-            <div class="mode-tags">
-                <button class="mode-btn active">Shadowing</button>
-                <button class="mode-btn">Speaking</button>
-                <button class="mode-btn">Dictation</button>
-            </div>
-        </div>
-        <div>
-            <button class="btn-add" onclick="promptNewVideo()">+ Add Video</button>
-        </div>
-    </header>
-
-    <!-- Main Workspace -->
-    <div class="main-layout" id="app">
-        <!-- Khung Video & Câu chi tiết -->
-        <div class="left-col">
-            <div class="video-container">
-                <div id="player"></div>
-            </div>
-
-            <div class="sentence-focus-box">
-                <div>
-                    <!-- Chữ + Phiên âm IPA -->
-                    <div class="sentence-words" id="focus-words"></div>
-                    <!-- Nghĩa tiếng Việt -->
-                    <div class="translation-vi" id="focus-vi"></div>
-                </div>
-
-                <!-- Các nút tuỳ chọn bên dưới -->
-                <div class="focus-toolbar">
-                    <div class="tool-group">
-                        <button class="tool-btn" onclick="toggleKaraoke(this)">✨ Karaoke</button>
-                        <button class="tool-btn active" id="btn-ipa" onclick="toggleIPA()">IPA</button>
-                        <button class="tool-btn active" id="btn-vi" onclick="toggleVI()">VI</button>
-                    </div>
-                    <div class="tool-group">
-                        <button class="tool-btn" onclick="replayCurrentSentence()">🔁 Nghe lại câu</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Danh sách toàn bộ phụ đề -->
-        <div class="right-col">
-            <div class="right-header">
-                <span style="font-weight: 600; font-size: 14px;" id="count-sentences">0 sentences</span>
-            </div>
-            <div class="search-box">
-                <input type="text" placeholder="Tìm kiếm lời thoại..." oninput="filterTranscript(this.value)">
-            </div>
-            <div class="sentence-list" id="sentence-list"></div>
-        </div>
-    </div>
-
-    <!-- YouTube API -->
-    <script src="https://youtube.com"></script>
+    <!-- Khung chứa video YouTube -->
+    <div id="player"></div>
+    
+    <input type="text" id="youtubeLink" placeholder="Dán link YouTube vào đây">
+    <button onclick="processVideo()">Phân tích & Tải dữ liệu</button>
+    
+    <!-- Khung chứa phụ đề như trong ảnh -->
+    <div id="transcript-container"></div>
 
     <script>
-        // Dữ liệu tiền xử lý (pre-processed) sẵn với IPA và Vietsub
-        let currentData = [
-            {
-                start: 0,
-                end: 4.2,
-                en: "Within a decade, I'm interviewing presidents.",
-                vi: "Chỉ trong vòng một thập kỷ, tôi đã đi phỏng vấn các vị tổng thống.",
-                words: [
-                    { t: "Within", ipa: "/wɪðˈɪn/" },
-                    { t: "a", ipa: "/ə/" },
-                    { t: "decade,", ipa: "/ˈdɛk.eɪd/" },
-                    { t: "I'm", ipa: "/aɪm/" },
-                    { t: "interviewing", ipa: "/ˈɪn.tɚ.vjuː.ɪŋ/" },
-                    { t: "presidents.", ipa: "/ˈprɛz.ɪ.dənts/" }
-                ]
-            },
-            {
-                start: 4.3,
-                end: 9.8,
-                en: "I'm covering the White House for the Wall Street Journal and the Washington Post.",
-                vi: "Tôi đưa tin về Nhà Trắng cho tờ Wall Street Journal và Washington Post.",
-                words: [
-                    { t: "I'm", ipa: "/aɪm/" },
-                    { t: "covering", ipa: "/ˈkʌv.ɚ.ɪŋ/" },
-                    { t: "the", ipa: "/ðə/" },
-                    { t: "White", ipa: "/waɪt/" },
-                    { t: "House", ipa: "/haʊs/" },
-                    { t: "for", ipa: "/fɔːr/" },
-                    { t: "the", ipa: "/ðə/" },
-                    { t: "Wall", ipa: "/wɔːl/" },
-                    { t: "Street", ipa: "/striːt/" },
-                    { t: "Journal", ipa: "/ˈdʒɜːr.nəl/" },
-                    { t: "and", ipa: "/ænd/" },
-                    { t: "the", ipa: "/ðə/" },
+        // 1. Nhúng YouTube IFrame API để điều khiển video
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '390',
+                width: '640',
+                videoId: '', // Sẽ load khi dán link
+                events: {
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        // 2. Hàm xử lý khi mày bấm nút kéo link
+        async function processVideo() {
+            const link = document.getElementById('youtubeLink').value;
+            // Tách ID video từ link (code đơn giản hóa)
+            const videoId = link.split('v=')[1].substring(0, 11);
+            
+            player.loadVideoById(videoId);
+
+            // Gọi thằng đệ Vercel lấy data pre-processed
+            // Thay bằng link Vercel thật của mày sau khi deploy
+            const vercelApiUrl = `https://ten-du-an-vercel-cua-may.vercel.app/api/process-video?id=${videoId}`;
+            
+            document.getElementById('transcript-container').innerText = "Đang xử lý toàn bộ video... Vui lòng đợi...";
+
+            const response = await fetch(vercelApiUrl);
+            const data = await response.json();
+
+            // LƯU VÀO BỘ NHỚ LOCAL THAY VÌ GỌI LẠI
+            localStorage.setItem(`video_data_${videoId}`, JSON.stringify(data));
+            
+            renderTranscript(data);
+        }
+
+        // 3. Hiển thị ra màn hình giống giao diện mày muốn
+        function renderTranscript(data) {
+            const container = document.getElementById('transcript-container');
+            container.innerHTML = '';
+            
+            data.forEach(line => {
+                const p = document.createElement('p');
+                p.innerHTML = `
+                    <strong>${line.text}</strong><br>
+                    <span style="color: gray">${line.ipa}</span><br>
+                    <span style="color: blue">${line.vi_translation}</span>
+                `;
+                // Bấm vào câu nào video nhảy đến đó như trong[cite: 3, 4]
+                p.onclick = () => player.seekTo(line.offset / 1000, true);
+                container.appendChild(p);
+            });
+        }
+
+        // 4. Theo dõi thời gian thực để highlight câu (0 trễ)
+        function onPlayerStateChange(event) {
+            if (event.data == YT.PlayerState.PLAYING) {
+                setInterval(() => {
+                    const currentTime = player.getCurrentTime() * 1000;
+                    // Chỗ này mày sẽ viết logic đối chiếu currentTime với line.offset 
+                    // trong localStorage để bôi đen text giống trong video nhé.
+                }, 100);
+            }
+        }
+    </script>
+</body>
+</html>
