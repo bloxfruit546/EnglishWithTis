@@ -3,106 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Học Tiếng Anh Trọng Vũ</title>
+    <title>Shadowing English - Trọng Vũ</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
-        #input-section { margin-bottom: 20px; }
-        input[type="text"] { width: 70%; padding: 10px; font-size: 16px; }
-        button { padding: 10px 20px; font-size: 16px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 5px;}
-        #player { width: 100%; aspect-ratio: 16/9; background: #000; margin-bottom: 20px; }
-        .subtitle-line { padding: 10px; border-bottom: 1px solid #eee; cursor: pointer; transition: background 0.2s; }
-        .subtitle-line:hover { background: #f0f8ff; }
-        .ipa-text { color: #666; font-size: 0.9em; margin-bottom: 5px; }
-        .eng-text { font-weight: bold; font-size: 1.1em; margin-bottom: 5px; }
+        /* Cài đặt chung */
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f0f2f5; margin: 0; padding: 20px; color: #333; }
+        
+        /* Thanh nhập link trên cùng */
+        .top-bar { display: flex; gap: 10px; margin-bottom: 20px; align-items: center; justify-content: center; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);}
+        input[type="text"] { padding: 12px 20px; width: 50%; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; outline: none; transition: 0.3s; }
+        input[type="text"]:focus { border-color: #00a8ff; box-shadow: 0 0 5px rgba(0, 168, 255, 0.3); }
+        button { background: #00a8ff; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; transition: 0.2s; }
+        button:hover { background: #0097e6; transform: translateY(-2px); }
+        
+        #status { text-align: center; color: #e84118; font-weight: bold; margin-bottom: 15px; font-size: 15px;}
+
+        /* Bố cục 2 cột chính */
+        .main-container { display: flex; gap: 20px; max-width: 1300px; margin: 0 auto; height: 80vh; }
+        
+        /* Cột Trái (Video + Từ vựng focus) */
+        .left-panel { flex: 6; display: flex; flex-direction: column; gap: 15px; }
+        .video-wrapper { background: black; border-radius: 12px; overflow: hidden; padding-top: 56.25%; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        #player { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        
+        .focus-box { background: white; border-radius: 12px; padding: 30px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); flex-grow: 1; display: flex; flex-direction: column; justify-content: center;}
+        .focus-ipa { color: #7f8fa6; font-size: 18px; margin-bottom: 10px; font-family: monospace; }
+        .focus-eng { font-size: 28px; font-weight: bold; margin-bottom: 15px; color: #2f3640; line-height: 1.4; }
+        .focus-vi { color: #0097e6; font-size: 18px; font-style: italic; }
+
+        /* Cột Phải (Danh sách câu) */
+        .right-panel { flex: 4; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow-y: auto; padding: 15px; }
+        .sub-item { padding: 15px; border-radius: 10px; margin-bottom: 10px; cursor: pointer; border: 2px solid transparent; transition: all 0.2s ease; }
+        .sub-item:hover { background: #f5f6fa; }
+        .sub-item.active { background: #e3f2fd; border-color: #00a8ff; }
+        .sub-item.active .sub-eng { color: #00a8ff; }
+        .sub-eng { font-weight: bold; font-size: 16px; margin-bottom: 8px; color: #2f3640; line-height: 1.4; }
+        .sub-vi { font-size: 14px; color: #718093; }
+        
+        /* Tùy chỉnh thanh cuộn cho đẹp */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
     </style>
 </head>
 <body>
 
-    <h2>Hệ thống học Tiếng Anh qua YouTube</h2>
+    <!-- Khu vực dán link -->
+    <div class="top-bar">
+        <input type="text" id="youtubeLink" placeholder="Dán link video YouTube vào đây (ví dụ: https://www.youtube.com/watch?v=...)">
+        <button onclick="processVideo()">+ Tải Video</button>
+    </div>
     
-    <div id="input-section">
-        <input type="text" id="youtubeLink" placeholder="Dán link YouTube vào đây (VD: https://www.youtube.com/watch?v=...)">
-        <button onclick="processVideo()">Tải Video & Phụ đề</button>
+    <div id="status"></div>
+
+    <!-- Khu vực chính -->
+    <div class="main-container">
+        
+        <!-- Cột 1: Video và Bảng Focus -->
+        <div class="left-panel">
+            <div class="video-wrapper">
+                <div id="player"></div>
+            </div>
+            <div class="focus-box">
+                <div class="focus-ipa" id="focus-ipa">/ Phiên âm IPA sẽ hiện ở đây /</div>
+                <div class="focus-eng" id="focus-eng">Click vào một câu bên phải để bắt đầu học nhé!</div>
+                <div class="focus-vi" id="focus-vi">Bản dịch tiếng Việt sẽ hiển thị tại đây.</div>
+            </div>
+        </div>
+        
+        <!-- Cột 2: Danh sách phụ đề chạy -->
+        <div class="right-panel" id="transcript-container">
+            <div style="text-align: center; color: #a4b0be; margin-top: 50%; font-size: 16px;">
+                Chưa có dữ liệu phụ đề. Vui lòng dán link video và bấm Tải Video.
+            </div>
+        </div>
+        
     </div>
 
-    <!-- Khung chứa video YouTube -->
-    <div id="player"></div>
-    
-    <!-- Nơi hiển thị thông báo trạng thái -->
-    <div id="status" style="color: red; margin-bottom: 10px;"></div>
-
-    <!-- Khung chứa phụ đề -->
-    <div id="transcript-container"></div>
-
-    <!-- Script điều khiển video YouTube -->
+    <!-- Script điều khiển -->
     <script src="https://www.youtube.com/iframe_api"></script>
     <script>
         let player;
         
-        // Khởi tạo khung video YouTube
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
-                height: '390',
+                height: '100%',
                 width: '100%',
                 videoId: '', 
             });
         }
 
-        // Hàm xử lý khi bấm nút "Tải Video & Phụ đề"
         async function processVideo() {
             const link = document.getElementById('youtubeLink').value;
             const statusDiv = document.getElementById('status');
             const container = document.getElementById('transcript-container');
             
-            // Lấy ID video từ link
             let videoId = '';
             try {
-                if (link.includes('v=')) {
-                    videoId = link.split('v=')[1].substring(0, 11);
-                } else if (link.includes('youtu.be/')) {
-                    videoId = link.split('youtu.be/')[1].substring(0, 11);
-                } else {
-                    throw new Error("Link không hợp lệ");
-                }
+                if (link.includes('v=')) videoId = link.split('v=')[1].substring(0, 11);
+                else if (link.includes('youtu.be/')) videoId = link.split('youtu.be/')[1].substring(0, 11);
+                else throw new Error("Lỗi link");
             } catch (e) {
-                statusDiv.innerText = "Vui lòng nhập link YouTube hợp lệ!";
+                statusDiv.innerText = "Link YouTube không đúng định dạng rồi Trọng Vũ ơi!";
                 return;
             }
 
-            // Đổi video trên khung phát
             player.loadVideoById(videoId);
-            statusDiv.innerText = "Đang kết nối Vercel để lấy phụ đề... Vui lòng đợi!";
+            statusDiv.style.color = "#00a8ff";
+            statusDiv.innerText = "Đang kéo dữ liệu từ Vercel qua... Đợi tao tí nhé!";
             container.innerHTML = '';
 
-            // LƯU Ý: THAY ĐƯỜNG LINK VERCEL CỦA MÀY VÀO ĐÂY
+            // Link chuẩn của mày tao đã gắn thẳng vào đây rồi
             const vercelApiUrl = `https://youtube-api-euzs.vercel.app/api/process-video?id=${videoId}`;
             
             try {
-                // Gọi API để lấy dữ liệu
                 const response = await fetch(vercelApiUrl);
-                if (!response.ok) throw new Error("Không lấy được dữ liệu");
+                if (!response.ok) throw new Error("Lỗi lấy dữ liệu");
                 
                 const data = await response.json();
-                statusDiv.innerText = "Tải phụ đề thành công! Bấm vào từng câu để tua video.";
+                statusDiv.innerText = ""; // Xóa thông báo khi thành công
                 
-                // Hiển thị phụ đề ra màn hình
-                data.forEach(line => {
+                data.forEach((line, index) => {
                     const div = document.createElement('div');
-                    div.className = 'subtitle-line';
+                    div.className = 'sub-item';
                     
+                    // Đoạn này render HTML cho cột bên phải
                     div.innerHTML = `
-                        <div class="ipa-text">/đang chờ API tạo IPA.../</div>
-                        <div class="eng-text">${line.text}</div>
-                        <div class="vi-text" style="color: #0066cc;">Bản dịch tiếng Việt đang chờ cập nhật...</div>
+                        <div class="sub-eng">${index + 1}. ${line.text}</div>
+                        <div class="sub-vi">Đang chờ tích hợp API dịch...</div>
                     `;
                     
-                    // Bấm vào câu nào, video tua đến đúng thời gian câu đó
-                    div.onclick = () => player.seekTo(line.offset / 1000, true);
+                    // Xử lý sự kiện click để tua video và đổi màu chữ
+                    div.onclick = () => {
+                        player.seekTo(line.offset / 1000, true);
+                        
+                        // Đẩy text sang cái bảng to đùng bên trái
+                        document.getElementById('focus-eng').innerText = line.text;
+                        
+                        // Đổi màu câu đang chọn
+                        document.querySelectorAll('.sub-item').forEach(el => el.classList.remove('active'));
+                        div.classList.add('active');
+                        
+                        // Tự động cuộn đến câu đang đọc
+                        div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    };
                     
                     container.appendChild(div);
                 });
             } catch (error) {
-                statusDiv.innerText = "Lỗi: Video này có thể không có phụ đề (Closed Captions) tiếng Anh.";
+                statusDiv.style.color = "#e84118";
+                statusDiv.innerText = "Video này không có phụ đề (Closed Captions) tiếng Anh rồi, kiếm video khác đi mày!";
             }
         }
     </script>
