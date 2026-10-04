@@ -10,16 +10,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
-  <!-- Import Maps for Three.js, Addons, and GSAP via ESM CDN -->
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "https://esm.sh/three@0.160.0",
-        "three/addons/": "https://esm.sh/three@0.160.0/examples/jsm/",
-        "gsap": "https://esm.sh/gsap@3.12.5"
-      }
-    }
-  </script>
+  <!-- Three.js, OrbitControls, and GSAP via high-reliability CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 
   <style>
     :root {
@@ -965,10 +959,8 @@
   </div>
 
   <!-- MAIN 3D APPLICATION LOGIC -->
-  <script type="module">
-    import * as THREE from 'three';
-    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-    import gsap from 'gsap';
+  <script>
+    const OrbitControls = THREE.OrbitControls;
 
     /* ==========================================================================
        1. GLOBAL STATE & CONFIGURATION
