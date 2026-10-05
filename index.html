@@ -1722,7 +1722,8 @@
        6. CABLE TOPOLOGY (CatmullRomCurve3D) & DATA FLOW PULSES
        ========================================================================== */
     function createCable(points, colorHex, radius, category, pulseSpeed = 1, pulseCount = 3) {
-      const curve = new THREE.CatmullRomCurve3D(points, false, 'centripetal', 0.2);
+      const CurveConstructor = THREE.CatmullRomCurve3 || THREE.CatmullRomCurve3D;
+      const curve = new CurveConstructor(points, false, 'centripetal', 0.2);
       const tubeGeom = new THREE.TubeGeometry(curve, 64, radius, 8, false);
       const tubeMat = new THREE.MeshBasicMaterial({
         color: colorHex,
