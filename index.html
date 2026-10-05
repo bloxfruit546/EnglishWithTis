@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TRUNG TÂM GIÁM SÁT MẠNG VÀ TÒA NHÀ - DIGITAL TWIN 3D</title>
   
-  <!-- Google Fonts: Orbitron & Rajdhani for Sci-Fi UI -->
+  <!-- Google Fonts: Orbitron, Rajdhani & Share Tech Mono for Sci-Fi UI -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
@@ -18,9 +18,9 @@
   <style>
     :root {
       --bg-dark: #070a13;
-      --panel-bg: rgba(9, 14, 28, 0.78);
-      --panel-border: rgba(0, 240, 255, 0.28);
-      --panel-border-hover: rgba(0, 240, 255, 0.7);
+      --panel-bg: rgba(9, 14, 28, 0.82);
+      --panel-border: rgba(0, 240, 255, 0.3);
+      --panel-border-hover: rgba(0, 240, 255, 0.75);
       --cyan: #00f0ff;
       --blue: #0077ff;
       --amber: #ffaa00;
@@ -70,7 +70,7 @@
       height: 100%;
       pointer-events: none;
       z-index: 2;
-      background: radial-gradient(circle at center, transparent 45%, rgba(4, 7, 16, 0.75) 100%),
+      background: radial-gradient(circle at center, transparent 45%, rgba(4, 7, 16, 0.78) 100%),
                   repeating-linear-gradient(0deg, rgba(0, 240, 255, 0.015) 0px, rgba(0, 240, 255, 0.015) 1px, transparent 1px, transparent 3px);
     }
 
@@ -80,13 +80,13 @@
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       border: 1px solid var(--panel-border);
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(0, 240, 255, 0.06);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.65), inset 0 0 15px rgba(0, 240, 255, 0.06);
       border-radius: 6px;
       transition: all 0.25s ease;
     }
     .glass-panel:hover {
       border-color: var(--panel-border-hover);
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 240, 255, 0.12);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.85), inset 0 0 20px rgba(0, 240, 255, 0.12);
     }
 
     /* ==========================================================================
@@ -135,7 +135,7 @@
 
     .brand-title {
       font-family: var(--font-cyber);
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 700;
       letter-spacing: 1.5px;
       color: #fff;
@@ -194,7 +194,6 @@
       animation: blink 1.2s infinite;
     }
 
-    /* Mini Sparkline canvas in header */
     #sparkline {
       width: 80px;
       height: 24px;
@@ -297,6 +296,12 @@
       background: rgba(0, 119, 255, 0.25);
       border-color: var(--cyan);
       color: #fff;
+    }
+    .preset-btn.highlight {
+      border-color: var(--cyan);
+      color: #fff;
+      background: rgba(0, 240, 255, 0.2);
+      box-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
     }
 
     /* Toggle switches */
@@ -417,7 +422,6 @@
       gap: 16px;
     }
 
-    /* Status badge pill */
     .status-pill {
       display: inline-flex;
       align-items: center;
@@ -440,7 +444,6 @@
       color: var(--amber);
     }
 
-    /* Data spec table */
     .spec-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -466,7 +469,6 @@
       word-break: break-all;
     }
 
-    /* CCTV Camera Live Feed Mockup */
     .cctv-screen {
       width: 100%;
       height: 140px;
@@ -515,7 +517,6 @@
       animation: blink 1s infinite;
     }
 
-    /* Real-time Oscilloscope / Bandwidth Waveform */
     .chart-container {
       background: rgba(0, 0, 0, 0.4);
       border: 1px solid rgba(0, 240, 255, 0.2);
@@ -536,7 +537,6 @@
       display: block;
     }
 
-    /* Uplink / Downlink tree */
     .topo-path {
       background: rgba(0, 119, 255, 0.08);
       border: 1px dashed rgba(0, 240, 255, 0.3);
@@ -567,7 +567,6 @@
       color: #fff;
     }
 
-    /* Action buttons in inspector */
     .inspector-actions {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -701,7 +700,6 @@
       50% { opacity: 0.25; }
     }
 
-    /* Responsive adjustments */
     @media (max-width: 900px) {
       header { height: auto; padding: 12px; flex-direction: column; gap: 8px; }
       .telemetry-row { flex-wrap: wrap; justify-content: center; }
@@ -729,7 +727,7 @@
       <div class="brand-icon"></div>
       <div class="brand-title">
         TRUNG TÂM GIÁM SÁT MẠNG VÀ TÒA NHÀ
-        <span class="sub">DIGITAL TWIN 3D SCI-FI ARCHITECTURE &bull; SCHOOL TOPOLOGY</span>
+        <span class="sub">DIGITAL TWIN 3D ARCHITECTURE // TOPOLOGY THEO BẢN VẼ</span>
       </div>
     </div>
 
@@ -793,15 +791,15 @@
     <!-- Camera Presets -->
     <div class="glass-panel control-card">
       <div class="card-title">
-        <span>GÓC NHÌN CAMERA</span>
+        <span>GÓC NHÌN & BẢN VẼ</span>
         <span style="font-size: 14px;">📐</span>
       </div>
       <div class="presets-grid">
-        <button class="preset-btn" id="btn-cam-iso">Isometric</button>
+        <button class="preset-btn" id="btn-cam-iso">Isometric 3D</button>
         <button class="preset-btn" id="btn-cam-wing-b">Dãy B (Hạ Tầng)</button>
         <button class="preset-btn" id="btn-cam-center">Dãy Ngang (PM)</button>
         <button class="preset-btn" id="btn-cam-wing-a">Dãy A (Lớp Học)</button>
-        <button class="preset-btn" id="btn-cam-top" style="grid-column: span 2;">Bản Vẽ Sơ Đồ 2D (Top-down)</button>
+        <button class="preset-btn highlight" id="btn-cam-top" style="grid-column: span 2;">📐 Chiếu Bản Vẽ 2D (Top-down)</button>
       </div>
     </div>
 
@@ -858,7 +856,7 @@
         <span class="pulse-dot"></span> ĐANG HOẠT ĐỘNG (ONLINE)
       </div>
 
-      <!-- Live CCTV Mock Screen (Only shows if Camera is clicked) -->
+      <!-- Live CCTV Mock Screen -->
       <div class="cctv-screen" id="cctv-preview">
         <canvas id="cctv-canvas"></canvas>
         <div class="cctv-hud-text" id="cctv-camera-id">CAM-P19 // LIVE FEED 1080P</div>
@@ -961,22 +959,21 @@
   <!-- MAIN 3D APPLICATION LOGIC -->
   <script>
     const OrbitControls = THREE.OrbitControls;
+    const CurveConstructor = THREE.CatmullRomCurve3 || THREE.CatmullRomCurve3D;
 
     /* ==========================================================================
        1. GLOBAL STATE & CONFIGURATION
        ========================================================================== */
     const state = {
-      filterMode: 'all', // 'all', 'backbone', 'labs', 'cctv'
+      filterMode: 'all',
       selectedNode: null,
       hoveredNode: null,
       particlesEnabled: true,
       labelsEnabled: true,
       floorsEnabled: true,
-      autoRotate: false,
-      pulseTime: 0
+      autoRotate: false
     };
 
-    // Arrays to hold scene collections
     const interactiveObjects = [];
     const labelSprites = [];
     const cableCurves = [];
@@ -988,21 +985,21 @@
     const routerLEDs = [];
 
     /* ==========================================================================
-       2. THREE.JS INITIALIZATION
+       2. THREE.JS SCENE INITIALIZATION
        ========================================================================== */
     const container = document.getElementById('canvas-container');
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x070a13);
-    scene.fog = new THREE.FogExp2(0x070a13, 0.007);
+    scene.fog = new THREE.FogExp2(0x070a13, 0.005);
 
     const camera = new THREE.PerspectiveCamera(
       45,
       window.innerWidth / window.innerHeight,
       0.5,
-      1000
+      1200
     );
-    // Initial isometric perspective
-    camera.position.set(70, 65, 95);
+    // Initial isometric position looking at the entire school
+    camera.position.set(75, 75, 95);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -1014,10 +1011,10 @@
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
-    controls.maxPolarAngle = Math.PI / 2 + 0.02; // Allow slightly below ground level
+    controls.maxPolarAngle = Math.PI / 2 + 0.02;
     controls.minDistance = 10;
-    controls.maxDistance = 260;
-    controls.target.set(0, 8, 25);
+    controls.maxDistance = 350;
+    controls.target.set(0, 10, 32);
     controls.update();
 
     // Lighting
@@ -1025,32 +1022,32 @@
     scene.add(ambientLight);
 
     const dirLight = new THREE.DirectionalLight(0xa5c9ff, 1.2);
-    dirLight.position.set(60, 100, 40);
+    dirLight.position.set(60, 120, 50);
     scene.add(dirLight);
 
-    const pointLightVNPT = new THREE.PointLight(0xffaa00, 2, 40);
-    pointLightVNPT.position.set(-45, 2, 68);
+    const pointLightVNPT = new THREE.PointLight(0xffaa00, 2.2, 45);
+    pointLightVNPT.position.set(-45, 2, 78);
     scene.add(pointLightVNPT);
 
     const pointLightRouter = new THREE.PointLight(0x00f0ff, 2.5, 45);
-    pointLightRouter.position.set(-45, 12, 5);
+    pointLightRouter.position.set(-36, 12, 0);
     scene.add(pointLightRouter);
 
-    // Neon Ground Grid
-    const gridHelper = new THREE.GridHelper(260, 52, 0x00f0ff, 0x0f2442);
+    // Neon Coordinate Ground Grid
+    const gridHelper = new THREE.GridHelper(280, 56, 0x00f0ff, 0x0f2442);
     gridHelper.position.y = -0.5;
-    gridHelper.material.opacity = 0.45;
+    gridHelper.material.opacity = 0.4;
     gridHelper.material.transparent = true;
     scene.add(gridHelper);
 
     // Floating Cyber Dust Particles
-    const dustCount = 800;
+    const dustCount = 700;
     const dustGeometry = new THREE.BufferGeometry();
     const dustPositions = new Float32Array(dustCount * 3);
     for (let i = 0; i < dustCount * 3; i += 3) {
-      dustPositions[i] = (Math.random() - 0.5) * 250;
-      dustPositions[i + 1] = Math.random() * 50;
-      dustPositions[i + 2] = (Math.random() - 0.5) * 250;
+      dustPositions[i] = (Math.random() - 0.5) * 260;
+      dustPositions[i + 1] = Math.random() * 55;
+      dustPositions[i + 2] = (Math.random() - 0.5) * 260;
     }
     dustGeometry.setAttribute('position', new THREE.BufferAttribute(dustPositions, 3));
     const dustMaterial = new THREE.PointsMaterial({
@@ -1086,8 +1083,7 @@
       canvas.width = 512;
       canvas.height = 140;
 
-      // Draw glass background pill
-      ctx.fillStyle = 'rgba(7, 12, 24, 0.85)';
+      ctx.fillStyle = 'rgba(7, 12, 24, 0.88)';
       ctx.strokeStyle = colorHex;
       ctx.lineWidth = 4;
       
@@ -1106,17 +1102,14 @@
       ctx.fill();
       ctx.stroke();
 
-      // Top decorative neon bar
       ctx.fillStyle = colorHex;
       ctx.fillRect(40, 10, 80, 4);
 
-      // Text Title
       ctx.fillStyle = '#ffffff';
       ctx.font = 'bold 30px Orbitron, sans-serif';
       ctx.textAlign = 'center';
       ctx.fillText(title, 256, 62);
 
-      // Subtitle
       if (subtitle) {
         ctx.fillStyle = colorHex;
         ctx.font = '500 22px Share Tech Mono, monospace';
@@ -1131,13 +1124,13 @@
         depthTest: false
       });
       const sprite = new THREE.Sprite(spriteMat);
-      sprite.scale.set(10, 2.7, 1);
+      sprite.scale.set(9.5, 2.6, 1);
       labelSprites.push(sprite);
       return sprite;
     }
 
     /* ==========================================================================
-       4. PROCEDURAL 3D ARCHITECTURE (FLOORPLANS & GLASS ROOMS)
+       4. PROCEDURAL ARCHITECTURE (FLOORPLANS MATCHING BLUEPRINT)
        ========================================================================== */
     const floorGlassMat = new THREE.MeshPhysicalMaterial({
       color: 0x0c223f,
@@ -1169,7 +1162,6 @@
       scene.add(slabMesh);
       floorMeshes.push(slabMesh);
 
-      // Neon blueprint edge
       const edges = new THREE.EdgesGeometry(slabGeom);
       const edgeLine = new THREE.LineSegments(edges, edgeLineMat);
       slabMesh.add(edgeLine);
@@ -1181,13 +1173,11 @@
       const roomGroup = new THREE.Group();
       roomGroup.position.set(x, y, z);
 
-      // Holographic low walls
       const wallGeom = new THREE.BoxGeometry(width, height, depth);
       const wallMesh = new THREE.Mesh(wallGeom, roomWallMat);
       wallMesh.position.y = height / 2;
       roomGroup.add(wallMesh);
 
-      // Neon Room Blueprint Edges
       const edges = new THREE.EdgesGeometry(wallGeom);
       const edgeLine = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({
         color: 0x00d4ff,
@@ -1201,49 +1191,38 @@
       return roomGroup;
     }
 
-    // Build the U-Shape School Structure
-    // Wing B (Left Infrastructure): X = -45, Z = 0 to 68
-    // Wing Ngang (Center Academic & Labs): X = -35 to +35, Z = 0
-    // Wing A (Right Classrooms): X = +45, Z = 0 to 68
-
-    // Floors for Wing B (Tầng 1 & Tầng 2)
-    createFloorSlab(20, 72, -45, 0, 34, 'Dãy B - Tầng 1');
-    createFloorSlab(20, 72, -45, 10, 34, 'Dãy B - Tầng 2 (Trung Tâm Mạng)');
-
-    // Floors for Dãy Ngang (Tầng 1, Tầng 2, Tầng 3)
-    createFloorSlab(70, 22, 0, 0, 0, 'Dãy Ngang - Tầng 1');
-    createFloorSlab(70, 22, 0, 10, 0, 'Dãy Ngang - Tầng 2 (Phòng Máy & Thư Viện)');
-    createFloorSlab(54, 22, 0, 20, 0, 'Dãy Ngang - Tầng 3 (Phòng TH Tiếng Anh)');
-
-    // Floors for Wing A (Tầng 1 & Tầng 2)
-    createFloorSlab(20, 72, 45, 0, 34, 'Dãy A - Tầng 1 (Phòng 1 - 6)');
-    createFloorSlab(20, 72, 45, 10, 34, 'Dãy A - Tầng 2 (Phòng 7 - 12)');
-
-    // Staircase Holograms connecting floors
-    function createStaircase(x, y, z, height = 10) {
+    function createStaircase(x, y, z, width = 4, length = 6, height = 10) {
       const stairGroup = new THREE.Group();
       stairGroup.position.set(x, y, z);
       const steps = 10;
-      const stepGeom = new THREE.BoxGeometry(4, height / steps, 3);
-      const stepMat = new THREE.MeshBasicMaterial({ color: 0x0077ff, transparent: true, opacity: 0.35 });
+      const stepGeom = new THREE.BoxGeometry(width, height / steps, length / steps);
+      const stepMat = new THREE.MeshBasicMaterial({ color: 0x0077ff, transparent: true, opacity: 0.4 });
       for (let i = 0; i < steps; i++) {
         const step = new THREE.Mesh(stepGeom, stepMat);
-        step.position.set(0, (i + 0.5) * (height / steps), i * 0.8 - 4);
+        step.position.set(0, (i + 0.5) * (height / steps), (i - steps / 2) * (length / steps));
         stairGroup.add(step);
       }
       scene.add(stairGroup);
+      return stairGroup;
     }
-    createStaircase(0, 0, 8, 10);
-    createStaircase(0, 10, 8, 10);
-    createStaircase(-45, 0, 28, 10);
-    createStaircase(-45, 0, 48, 10);
-    createStaircase(45, 0, 38, 10);
+
+    // BUILD SPATIAL FLOORS MATCHING THE 2D BLUEPRINT
+    // Wing B: Left wing (X = -45, Z = 0 to 66)
+    createFloorSlab(18, 68, -45, 0, 33, 'Dãy B - Tầng 1 (Hành lang/Sân trệt)');
+    createFloorSlab(18, 68, -45, 10, 33, 'Dãy B - Tầng 2 (Phòng 19-24 & Trục Hạ Tầng)');
+
+    // Dãy Ngang (Central Connecting Block): X = -36 to +36 (Width = 72), Z = -8 to +8 (Depth = 16)
+    createFloorSlab(74, 18, 0, 0, 0, 'Dãy Ngang - Tầng 1 (Hóa, Cầu thang, Lý, WC)');
+    createFloorSlab(74, 18, 0, 10, 0, 'Dãy Ngang - Tầng 2 (PM1, PM2, Cầu thang, Thư viện)');
+    createFloorSlab(74, 18, 0, 20, 0, 'Dãy Ngang - Tầng 3 (Phòng Phụ, Cầu thang, TH Tiếng Anh)');
+
+    // Wing A: Right wing (X = +45, Z = 0 to 66)
+    createFloorSlab(18, 68, 45, 0, 33, 'Dãy A - Tầng 1 (Phòng 6 -> 1)');
+    createFloorSlab(18, 68, 45, 10, 33, 'Dãy A - Tầng 2 (Phòng 7 -> 12)');
 
     /* ==========================================================================
-       5. 3D DEVICE MODELS & WORKSTATIONS
+       5. 3D DEVICE MODELS & INTERACTIVE NODES
        ========================================================================== */
-
-    // Helper: Register clickable device node
     function registerInteractiveNode(mesh, data) {
       mesh.userData = {
         isNode: true,
@@ -1269,20 +1248,17 @@
       const group = new THREE.Group();
       group.position.set(x, y, z);
 
-      // Base pedestal
       const baseGeom = new THREE.CylinderGeometry(2.5, 3.2, 1.2, 6);
       const baseMat = new THREE.MeshStandardMaterial({ color: 0x111624, metalness: 0.9, roughness: 0.3 });
       const base = new THREE.Mesh(baseGeom, baseMat);
       group.add(base);
 
-      // Glowing core laser pillar
       const coreGeom = new THREE.CylinderGeometry(1.2, 1.2, 5, 16);
       const coreMat = new THREE.MeshBasicMaterial({ color: 0xffaa00, transparent: true, opacity: 0.9 });
       const core = new THREE.Mesh(coreGeom, coreMat);
       core.position.y = 3;
       group.add(core);
 
-      // Rotating hologram rings
       const ringGeom = new THREE.TorusGeometry(2.2, 0.1, 8, 32);
       const ringMat = new THREE.MeshBasicMaterial({ color: 0xffaa00 });
       const ring1 = new THREE.Mesh(ringGeom, ringMat);
@@ -1294,7 +1270,6 @@
       ring2.position.y = 4.2;
       group.add(ring2);
 
-      // Beacon Light vertical beam
       const beamGeom = new THREE.CylinderGeometry(0.3, 0.8, 14, 16);
       const beamMat = new THREE.MeshBasicMaterial({
         color: 0xffaa00,
@@ -1312,7 +1287,7 @@
         name: 'VNPT Cáp Quang Ngoại Vi (Core Gateway)',
         type: 'INTERNET_SERVICE_PROVIDER',
         ip: '113.161.78.1 (Static Public)',
-        location: 'Trục Ngầm Ngoại Vi - Cổng Dãy B',
+        location: 'Trục Ngầm Ngoại Vi - Cổng Dưới Dãy B',
         bandwidth: '10 Gbps FTTH MetroNet',
         status: 'ONLINE',
         uplink: 'VNPT NOC Quốc Gia Tier-1',
@@ -1326,14 +1301,13 @@
 
       return { group, core, ring1, ring2 };
     }
-    const vnptPylon = createVNPTPylon(-45, 0, 68);
+    const vnptPylon = createVNPTPylon(-45, 0, 78);
 
-    // 5.2 CORE ROUTER & LOAD BALANCER (Dãy B Tầng 2)
+    // 5.2 CORE ROUTER & CÂN BẰNG TẢI + HUB TỔNG (Dãy B / Dãy Ngang Tầng 2)
     function createCoreRouterRack(x, y, z) {
       const group = new THREE.Group();
       group.position.set(x, y, z);
 
-      // Server Cabinet / Rack
       const rackGeom = new THREE.BoxGeometry(3.5, 5, 2.5);
       const rackMat = new THREE.MeshStandardMaterial({
         color: 0x0a101f,
@@ -1344,16 +1318,13 @@
       rack.position.y = 2.5;
       group.add(rack);
 
-      // Blinking status LED matrix on the front face
       const frontPanelGeom = new THREE.PlaneGeometry(3.2, 4.4);
       const frontPanelMat = new THREE.MeshBasicMaterial({ color: 0x020712 });
       const frontPanel = new THREE.Mesh(frontPanelGeom, frontPanelMat);
       frontPanel.position.set(0, 2.5, 1.26);
       group.add(frontPanel);
 
-      // Glowing LED Units with blinking capability
       const ledGeom = new THREE.BoxGeometry(0.3, 0.15, 0.05);
-
       for (let r = 0; r < 5; r++) {
         for (let c = 0; c < 6; c++) {
           const color = (c % 2 === 0) ? 0x00f0ff : 0x00ff88;
@@ -1371,11 +1342,11 @@
         name: 'Router Trung Tâm & Cân Bằng Tải',
         type: 'ENTERPRISE_CORE_ROUTER',
         ip: '192.168.1.1 (Gateway)',
-        location: 'Dãy B - Tầng 2 (Khu Hạ Tầng NOC)',
+        location: 'Dãy B Tầng 2 // Giáp Dãy Ngang T2',
         bandwidth: '10 Gbps Throughput',
         status: 'ONLINE',
         uplink: 'VNPT Cáp Quang Ngầm',
-        downlink: 'Hub Tổng Dãy B, Hub Dãy Ngang T2',
+        downlink: 'Hub Tổng Dãy B, PM1, PM2, Dãy A',
         category: 'backbone'
       });
 
@@ -1385,16 +1356,14 @@
 
       return { group, rack };
     }
-    const coreRouter = createCoreRouterRack(-45, 10, 5);
+    const coreRouter = createCoreRouterRack(-35, 10, 0);
 
-    // 5.3 DISTRIBUTION HUBS & SWITCHES
     function createSwitchBox(x, y, z, name, ip, location, downlink) {
       const boxGeom = new THREE.BoxGeometry(2.4, 0.9, 1.5);
       const boxMat = new THREE.MeshStandardMaterial({ color: 0x141f36, metalness: 0.8, roughness: 0.2 });
       const box = new THREE.Mesh(boxGeom, boxMat);
       box.position.set(x, y + 0.45, z);
 
-      // Front LED row
       const ledBarGeom = new THREE.PlaneGeometry(2.1, 0.2);
       const ledBarMat = new THREE.MeshBasicMaterial({ color: 0x00ff88 });
       const ledBar = new THREE.Mesh(ledBarGeom, ledBarMat);
@@ -1418,14 +1387,13 @@
       return box;
     }
 
-    const hubTongB = createSwitchBox(-45, 10, 10, 'Hub Tổng Dãy B', '192.168.1.2', 'Dãy B T2', 'Phòng 19-24, Hub Dãy Ngang T2');
-    const hubTrungTamNgang = createSwitchBox(0, 10, 0, 'Hub Phân Phối Dãy Ngang T2', '192.168.1.3', 'Dãy Ngang T2 (Trung Tâm)', 'PM1, PM2, Thư Viện, TH Lý, TH Tiếng Anh, Dãy A');
-    const switchPM1 = createSwitchBox(-20, 10, 0, 'Switch Phòng Máy 1 (48-Port)', '192.168.20.1', 'Dãy Ngang T2 - PM1', '32 Máy Trạm MT1-MT32, TV, Máy Chiếu');
-    const switchPM2 = createSwitchBox(18, 10, 0, 'Switch Phòng Máy 2 (48-Port)', '192.168.30.1', 'Dãy Ngang T2 - PM2', '32 Máy Trạm MT1-MT32, TV, Máy Chiếu');
-    const switchDayAT1 = createSwitchBox(45, 0, 5, 'Switch Dãy A Tầng 1', '192.168.40.1', 'Dãy A T1', 'Phòng 1 đến Phòng 6');
-    const switchDayAT2 = createSwitchBox(45, 10, 5, 'Switch Dãy A Tầng 2', '192.168.50.1', 'Dãy A T2', 'Phòng 7 đến Phòng 12');
+    const hubTongB = createSwitchBox(-31, 10, 0, 'Hub Tổng Phân Phối', '192.168.1.2', 'Dãy B / Dãy Ngang T2', 'Phòng 19-24, PM1, PM2, Thư Viện, Dãy A');
+    const switchPM1 = createSwitchBox(-18, 10, 0, 'Switch Phòng Máy 1 (48-Port)', '192.168.20.1', 'Dãy Ngang T2 - PM1', '32 Máy Trạm MT1-MT32, TV, Máy Chiếu');
+    const switchPM2 = createSwitchBox(4, 10, 0, 'Switch Phòng Máy 2 (48-Port)', '192.168.30.1', 'Dãy Ngang T2 - PM2', '32 Máy Trạm MT1-MT32, TV, Máy Chiếu');
+    const switchDayAT1 = createSwitchBox(45, 0, 0, 'Switch Dãy A Tầng 1', '192.168.40.1', 'Dãy A T1', 'Phòng 6 đến Phòng 1');
+    const switchDayAT2 = createSwitchBox(45, 10, 0, 'Switch Dãy A Tầng 2', '192.168.50.1', 'Dãy A T2', 'Phòng 7 đến Phòng 12');
 
-    // 5.4 COMPUTER LAB WORKSTATIONS (PHÒNG MÁY 1 & 2 - 32 MT + TV + PROJECTOR)
+    // 5.3 COMPUTER WORKSTATIONS
     const pcDeskGeom = new THREE.BoxGeometry(1.2, 0.7, 0.8);
     const pcDeskMat = new THREE.MeshStandardMaterial({ color: 0x1b2844, roughness: 0.4 });
     const monitorGeom = new THREE.BoxGeometry(0.7, 0.45, 0.06);
@@ -1435,17 +1403,14 @@
       const pcGroup = new THREE.Group();
       pcGroup.position.set(x, y, z);
 
-      // Desk
       const desk = new THREE.Mesh(pcDeskGeom, pcDeskMat);
       desk.position.y = 0.35;
       pcGroup.add(desk);
 
-      // Monitor
       const monitor = new THREE.Mesh(monitorGeom, screenMat);
       monitor.position.set(0, 0.95, -0.15);
       pcGroup.add(monitor);
 
-      // PC Tower
       const towerGeom = new THREE.BoxGeometry(0.2, 0.4, 0.5);
       const towerMat = new THREE.MeshStandardMaterial({ color: 0x090e18 });
       const tower = new THREE.Mesh(towerGeom, towerMat);
@@ -1462,177 +1427,24 @@
         location: roomName,
         bandwidth: '1000 Mbps Full Duplex',
         status: 'ONLINE',
-        uplink: roomName.includes('PM1') ? 'Switch Phòng Máy 1' : 'Switch Phòng Máy 2',
+        uplink: roomName.includes('PM1') ? 'Switch Phòng Máy 1' : roomName.includes('PM2') ? 'Switch Phòng Máy 2' : 'Switch Phân Phối Tầng',
         downlink: 'Thiết bị đầu cuối (Endpoint)',
-        category: 'labs'
+        category: (roomName.includes('PM1') || roomName.includes('PM2')) ? 'labs' : 'endpoint'
       });
 
       return pcGroup;
     }
 
-    // Populate Phòng Máy 1 (X: -32 to -8, Z: -8 to +8, Y: 10)
-    // 32 PCs = 4 rows x 8 columns
-    createRoomBoundary(24, 6, 18, -20, 10, 0, 'Phòng Máy 1');
-    const labelPM1 = createLabelSprite('PHÒNG MÁY 1', '32 MÁY TRẠM + TV + MÁY CHIẾU', '#00f0ff');
-    labelPM1.position.set(-20, 17, 0);
-    scene.add(labelPM1);
-
-    for (let row = 0; row < 4; row++) {
-      for (let col = 0; col < 8; col++) {
-        const pcIndex = row * 8 + col + 1;
-        const px = -28.5 + col * 2.4;
-        const pz = -6.5 + row * 4.2;
-        createComputerWorkstation(
-          px, 10, pz,
-          `MT-${pcIndex.toString().padStart(2, '0')}`,
-          `192.168.20.${100 + pcIndex}`,
-          'Phòng Máy 1'
-        );
-      }
-    }
-
-    // Smart TV & Projector for PM1
-    function createSmartTV(x, y, z, rotY, roomName) {
-      const tvGeom = new THREE.BoxGeometry(4.0, 2.2, 0.15);
-      const tvMat = new THREE.MeshBasicMaterial({ color: 0x0077ff });
-      const tv = new THREE.Mesh(tvGeom, tvMat);
-      tv.position.set(x, y, z);
-      tv.rotation.y = rotY;
-      scene.add(tv);
-
-      registerInteractiveNode(tv, {
-        name: `Smart TV 75" 4K (${roomName})`,
-        type: 'SMART_DISPLAY_IOT',
-        ip: roomName.includes('PM1') ? '192.168.20.250' : '192.168.30.250',
-        location: roomName,
-        bandwidth: '100 Mbps (Streaming HDMI over IP)',
-        status: 'ONLINE',
-        uplink: roomName.includes('PM1') ? 'Switch Phòng Máy 1' : 'Switch Phòng Máy 2',
-        downlink: 'Màn hình hiển thị giáo viên',
-        category: 'labs'
-      });
-      return tv;
-    }
-    createSmartTV(-31.5, 13.5, 0, Math.PI / 2, 'Phòng Máy 1');
-
-    function createProjector(x, y, z, roomName) {
-      const projGeom = new THREE.BoxGeometry(0.8, 0.4, 0.8);
-      const projMat = new THREE.MeshStandardMaterial({ color: 0x223355 });
-      const proj = new THREE.Mesh(projGeom, projMat);
-      proj.position.set(x, y, z);
-
-      // Light projection cone
-      const coneGeom = new THREE.ConeGeometry(3.5, 7, 16, 1, true);
-      const coneMat = new THREE.MeshBasicMaterial({
-        color: 0x00f0ff,
-        transparent: true,
-        opacity: 0.12,
-        side: THREE.DoubleSide,
-        depthWrite: false
-      });
-      const cone = new THREE.Mesh(coneGeom, coneMat);
-      cone.rotation.x = Math.PI / 2 + 0.4;
-      cone.position.set(0, -1.8, 2.5);
-      proj.add(cone);
-
-      scene.add(proj);
-
-      registerInteractiveNode(proj, {
-        name: `Máy Chiếu Laser EPSON (${roomName})`,
-        type: 'SMART_PROJECTOR_IOT',
-        ip: roomName.includes('PM1') ? '192.168.20.251' : '192.168.30.251',
-        location: roomName,
-        bandwidth: '100 Mbps',
-        status: 'ONLINE',
-        uplink: roomName.includes('PM1') ? 'Switch Phòng Máy 1' : 'Switch Phòng Máy 2',
-        downlink: 'Trình chiếu giảng dạy',
-        category: 'labs'
-      });
-      return proj;
-    }
-    createProjector(-20, 15.5, -4, 'Phòng Máy 1');
-
-    // Populate Phòng Máy 2 (X: +6 to +26, Z: -8 to +8, Y: 10)
-    // 32 PCs = 4 rows x 8 columns
-    createRoomBoundary(22, 6, 18, 17, 10, 0, 'Phòng Máy 2');
-    const labelPM2 = createLabelSprite('PHÒNG MÁY 2', '32 MÁY TRẠM + TV + MÁY CHIẾU', '#00f0ff');
-    labelPM2.position.set(17, 17, 0);
-    scene.add(labelPM2);
-
-    for (let row = 0; row < 4; row++) {
-      for (let col = 0; col < 8; col++) {
-        const pcIndex = row * 8 + col + 1;
-        const px = 8.5 + col * 2.4;
-        const pz = -6.5 + row * 4.2;
-        createComputerWorkstation(
-          px, 10, pz,
-          `MT-${pcIndex.toString().padStart(2, '0')}`,
-          `192.168.30.${100 + pcIndex}`,
-          'Phòng Máy 2'
-        );
-      }
-    }
-    createSmartTV(27.5, 13.5, 0, -Math.PI / 2, 'Phòng Máy 2');
-    createProjector(17, 15.5, -4, 'Phòng Máy 2');
-
-    // Thư Viện (Dãy Ngang Tầng 2, Phía Phải)
-    createRoomBoundary(8, 6, 18, 31, 10, 0, 'Thư Viện');
-    createComputerWorkstation(31, 10, 0, 'MT-Thư Viện', '192.168.10.50', 'Thư Viện');
-    const labelTV = createLabelSprite('THƯ VIỆN', '1 MT QUẢN LÝ SÁCH', '#00ff88');
-    labelTV.position.set(31, 16, 0);
-    scene.add(labelTV);
-
-    // Dãy Ngang Tầng 1: Phòng TH Hóa, Cầu thang, Phòng TH Lý (1 MT), Nhà vệ sinh
-    createRoomBoundary(22, 6, 18, -20, 0, 0, 'Phòng TH Hóa');
-    createRoomBoundary(22, 6, 18, 18, 0, 0, 'Phòng TH Lý');
-    createRoomBoundary(12, 5, 8, 0, 0, -5, 'Nhà Vệ Sinh');
-
-    createComputerWorkstation(18, 0, 0, 'MT-TH Lý', '192.168.10.60', 'Phòng TH Lý');
-    const labelLy = createLabelSprite('PHÒNG TH LÝ', '1 MÁY TRẠM GIẢNG VIÊN', '#00ff88');
-    labelLy.position.set(18, 6, 0);
-    scene.add(labelLy);
-
-    const labelHoa = createLabelSprite('PHÒNG TH HÓA', 'PHÒNG THÍ NGHIỆM', '#7f99b8');
-    labelHoa.position.set(-20, 6, 0);
-    scene.add(labelHoa);
-
-    const labelNVS = createLabelSprite('NHÀ VỆ SINH', 'KHU VỰC PHỤ TRỢ', '#7f99b8');
-    labelNVS.scale.set(6, 1.6, 1);
-    labelNVS.position.set(0, 5, -5);
-    scene.add(labelNVS);
-
-    const labelStairT1 = createLabelSprite('CẦU THANG T1-T2', 'TRỤC GIAO THÔNG', '#0077ff');
-    labelStairT1.scale.set(6, 1.6, 1);
-    labelStairT1.position.set(0, 5, 8);
-    scene.add(labelStairT1);
-
-    // Dãy Ngang Tầng 3: Phòng TH Tiếng Anh
-    createRoomBoundary(36, 6, 18, 0, 20, 0, 'Phòng TH Tiếng Anh');
-    const labelTA = createLabelSprite('PHÒNG TH TIẾNG ANH', 'LAB NGOẠI NGỮ CHUYÊN DỤNG', '#a855f7');
-    labelTA.position.set(0, 26, 0);
-    scene.add(labelTA);
-
-    for (let c = 0; c < 6; c++) {
-      createComputerWorkstation(
-        -10 + c * 4, 20, 0,
-        `MT-TA-${c + 1}`,
-        `192.168.60.${10 + c}`,
-        'Phòng TH Tiếng Anh'
-      );
-    }
-
-    // 5.5 SECURITY CAMERA NODES (HỆ THỐNG GIÁM SÁT AN NINH)
+    // 5.4 SECURITY CAMERA NODES (HỆ THỐNG GIÁM SÁT AN NINH)
     function createCameraNode(x, y, z, id, roomName) {
       const group = new THREE.Group();
       group.position.set(x, y, z);
 
-      // Camera base & spherical eye
       const sphereGeom = new THREE.SphereGeometry(0.5, 16, 16);
       const sphereMat = new THREE.MeshBasicMaterial({ color: 0xff3366 });
       const camEye = new THREE.Mesh(sphereGeom, sphereMat);
       group.add(camEye);
 
-      // Scanning Frustum Cone
       const coneGeom = new THREE.ConeGeometry(3.5, 8, 16, 1, true);
       const coneMat = new THREE.MeshBasicMaterial({
         color: 0xff3366,
@@ -1666,63 +1478,273 @@
       return group;
     }
 
-    // 5.6 DÃY B: PHÒNG 19 - PHÒNG 24 (TẦNG 2)
+    /* ==========================================================================
+       6. KHU VỰC DÃY B TẦNG 2 (8 BAYS: P19 -> P24 + 2 CẦU THANG)
+       ========================================================================== */
+    // Bay 1: Phòng 19 (Z = 4)
+    // Bay 2: Phòng 20 (Z = 12)
+    // Bay 3: Cầu thang 1 (Z = 20)
+    // Bay 4: Phòng 21 (Z = 28)
+    // Bay 5: Phòng 22 (Z = 36)
+    // Bay 6: Cầu thang 2 (Z = 44)
+    // Bay 7: Phòng 23 (Z = 52)
+    // Bay 8: Phòng 24 (Z = 60)
     const wingBRooms = [
-      { name: 'Phòng 19', z: 15 },
-      { name: 'Phòng 20', z: 22 },
-      { name: 'Phòng 21', z: 35 },
-      { name: 'Phòng 22', z: 42 },
-      { name: 'Phòng 23', z: 55 },
-      { name: 'Phòng 24', z: 62 }
+      { name: 'Phòng 19', z: 4, isRoom: true },
+      { name: 'Phòng 20', z: 12, isRoom: true },
+      { name: 'Cầu thang B1', z: 20, isStair: true },
+      { name: 'Phòng 21', z: 28, isRoom: true },
+      { name: 'Phòng 22', z: 36, isRoom: true },
+      { name: 'Cầu thang B2', z: 44, isStair: true },
+      { name: 'Phòng 23', z: 52, isRoom: true },
+      { name: 'Phòng 24', z: 60, isRoom: true }
     ];
 
-    wingBRooms.forEach((rm, i) => {
-      createRoomBoundary(16, 5, 6, -45, 10, rm.z, rm.name);
-      createComputerWorkstation(-45, 10, rm.z, `MT-${rm.name}`, `192.168.19.${10 + i}`, rm.name);
-      createCameraNode(-51, 14, rm.z - 2, `CAM-P${19 + i}`, rm.name);
+    wingBRooms.forEach((item, i) => {
+      if (item.isRoom) {
+        createRoomBoundary(16, 5, 7, -45, 10, item.z, item.name);
+        createComputerWorkstation(-45, 10, item.z, `MT-${item.name}`, `192.168.19.${10 + i}`, item.name);
+        // Camera positioned on the corridor wall matching blueprint
+        createCameraNode(-38, 14, item.z, `CAM-${item.name}`, item.name);
 
-      const lbl = createLabelSprite(rm.name, '1 MT + 1 CAMERA', '#00f0ff');
-      lbl.scale.set(6, 1.6, 1);
-      lbl.position.set(-45, 14.5, rm.z);
-      scene.add(lbl);
-    });
-
-    // 5.7 DÃY A: PHÒNG 1 - PHÒNG 6 (TẦNG 1) & PHÒNG 7 - PHÒNG 12 (TẦNG 2)
-    const wingAZ = [13, 20, 27, 43, 50, 57];
-
-    // Tầng 1: P1 -> P6
-    wingAZ.forEach((zPos, idx) => {
-      const roomNum = idx + 1;
-      const roomName = `Phòng ${roomNum}`;
-      createRoomBoundary(16, 5, 6, 45, 0, zPos, roomName);
-      createComputerWorkstation(45, 0, zPos, `MT-${roomName}`, `192.168.40.${10 + idx}`, roomName);
-      createCameraNode(51, 4, zPos - 2, `CAM-P${roomNum}`, roomName);
-
-      const lbl = createLabelSprite(roomName, '1 MT + 1 CAMERA', '#00f0ff');
-      lbl.scale.set(6, 1.6, 1);
-      lbl.position.set(45, 4.5, zPos);
-      scene.add(lbl);
-    });
-
-    // Tầng 2: P7 -> P12
-    wingAZ.forEach((zPos, idx) => {
-      const roomNum = idx + 7;
-      const roomName = `Phòng ${roomNum}`;
-      createRoomBoundary(16, 5, 6, 45, 10, zPos, roomName);
-      createComputerWorkstation(45, 10, zPos, `MT-${roomName}`, `192.168.50.${10 + idx}`, roomName);
-      createCameraNode(51, 14, zPos - 2, `CAM-P${roomNum}`, roomName);
-
-      const lbl = createLabelSprite(roomName, '1 MT + 1 CAMERA', '#00f0ff');
-      lbl.scale.set(6, 1.6, 1);
-      lbl.position.set(45, 14.5, zPos);
-      scene.add(lbl);
+        const lbl = createLabelSprite(item.name, '1 MT + 1 CAMERA', '#00f0ff');
+        lbl.scale.set(6, 1.6, 1);
+        lbl.position.set(-45, 14.5, item.z);
+        scene.add(lbl);
+      } else if (item.isStair) {
+        createStaircase(-45, 0, item.z, 5, 6, 10);
+        const lbl = createLabelSprite('CẦU THANG', 'DÃY B', '#0077ff');
+        lbl.scale.set(5.5, 1.5, 1);
+        lbl.position.set(-45, 14.5, item.z);
+        scene.add(lbl);
+      }
     });
 
     /* ==========================================================================
-       6. CABLE TOPOLOGY (CatmullRomCurve3D) & DATA FLOW PULSES
+       7. KHU VỰC DÃY A (TẦNG 1 & TẦNG 2 CHÍNH XÁC THEO BẢN VẼ)
+       ========================================================================== */
+    // DÃY A TẦNG 1 (Y = 0):
+    // P6 (Z=4) -> P5 (Z=12) -> Cầu thang (Z=20) -> P4 (Z=28) -> P3 (Z=36) -> Cầu thang (Z=44) -> P2 (Z=52) -> P1 (Z=60)
+    const wingAT1 = [
+      { name: 'Phòng 6', z: 4, isRoom: true, num: 6 },
+      { name: 'Phòng 5', z: 12, isRoom: true, num: 5 },
+      { name: 'Cầu thang A1 (T1)', z: 20, isStair: true },
+      { name: 'Phòng 4', z: 28, isRoom: true, num: 4 },
+      { name: 'Phòng 3', z: 36, isRoom: true, num: 3 },
+      { name: 'Cầu thang A2 (T1)', z: 44, isStair: true },
+      { name: 'Phòng 2', z: 52, isRoom: true, num: 2 },
+      { name: 'Phòng 1', z: 60, isRoom: true, num: 1 }
+    ];
+
+    wingAT1.forEach((item, i) => {
+      if (item.isRoom) {
+        createRoomBoundary(16, 5, 7, 45, 0, item.z, item.name);
+        createComputerWorkstation(45, 0, item.z, `MT-${item.name}`, `192.168.40.${10 + item.num}`, item.name);
+        createCameraNode(38, 4, item.z, `CAM-P${item.num}`, item.name);
+
+        const lbl = createLabelSprite(item.name, '1 MT + 1 CAMERA', '#00f0ff');
+        lbl.scale.set(6, 1.6, 1);
+        lbl.position.set(45, 4.5, item.z);
+        scene.add(lbl);
+      } else if (item.isStair) {
+        createStaircase(45, 0, item.z, 5, 6, 10);
+        const lbl = createLabelSprite('CẦU THANG', 'DÃY A T1-T2', '#0077ff');
+        lbl.scale.set(5.5, 1.5, 1);
+        lbl.position.set(45, 4.5, item.z);
+        scene.add(lbl);
+      }
+    });
+
+    // DÃY A TẦNG 2 (Y = 10):
+    // P7 (Z=4) -> P8 (Z=12) -> Cầu thang (Z=20) -> P9 (Z=28) -> P10 (Z=36) -> Cầu thang (Z=44) -> P11 (Z=52) -> P12 (Z=60)
+    const wingAT2 = [
+      { name: 'Phòng 7', z: 4, isRoom: true, num: 7 },
+      { name: 'Phòng 8', z: 12, isRoom: true, num: 8 },
+      { name: 'Cầu thang A1 (T2)', z: 20, isStair: true },
+      { name: 'Phòng 9', z: 28, isRoom: true, num: 9 },
+      { name: 'Phòng 10', z: 36, isRoom: true, num: 10 },
+      { name: 'Cầu thang A2 (T2)', z: 44, isStair: true },
+      { name: 'Phòng 11', z: 52, isRoom: true, num: 11 },
+      { name: 'Phòng 12', z: 60, isRoom: true, num: 12 }
+    ];
+
+    wingAT2.forEach((item, i) => {
+      if (item.isRoom) {
+        createRoomBoundary(16, 5, 7, 45, 10, item.z, item.name);
+        createComputerWorkstation(45, 10, item.z, `MT-${item.name}`, `192.168.50.${10 + item.num}`, item.name);
+        createCameraNode(38, 14, item.z, `CAM-P${item.num}`, item.name);
+
+        const lbl = createLabelSprite(item.name, '1 MT + 1 CAMERA', '#00f0ff');
+        lbl.scale.set(6, 1.6, 1);
+        lbl.position.set(45, 14.5, item.z);
+        scene.add(lbl);
+      }
+    });
+
+    /* ==========================================================================
+       8. KHU VỰC DÃY NGANG (TẦNG 1, TẦNG 2, TẦNG 3 CHÍNH XÁC THEO BẢN VẼ)
+       ========================================================================== */
+    // 8.1 DÃY NGANG TẦNG 1 (Y = 0):
+    // [Phòng TH Hóa (rộng)] | [Cầu thang] | [Phòng TH Lí (1 MT)] | [Nhà vệ sinh]
+    createRoomBoundary(28, 6, 16, -21, 0, 0, 'Phòng TH Hóa');
+    const labelHoa = createLabelSprite('PHÒNG TH HÓA', 'PHÒNG THÍ NGHIỆM', '#7f99b8');
+    labelHoa.position.set(-21, 6, 0);
+    scene.add(labelHoa);
+
+    createStaircase(0, 0, 0, 6, 8, 10);
+    const labelStairNgang1 = createLabelSprite('CẦU THANG', 'TRỤC TRUNG TÂM T1', '#0077ff');
+    labelStairNgang1.position.set(0, 6, 0);
+    scene.add(labelStairNgang1);
+
+    createRoomBoundary(22, 6, 16, 16, 0, 0, 'Phòng TH Lí');
+    createComputerWorkstation(16, 0, 0, 'MT-TH Lí', '192.168.10.60', 'Phòng TH Lí');
+    const labelLy = createLabelSprite('PHÒNG TH LÍ', '1 MÁY TRẠM GIẢNG VIÊN', '#00ff88');
+    labelLy.position.set(16, 6, 0);
+    scene.add(labelLy);
+
+    createRoomBoundary(10, 5, 16, 32, 0, 0, 'Nhà Vệ Sinh');
+    const labelNVS = createLabelSprite('NHÀ VỆ SINH', 'KHU VỰC PHỤ TRỢ', '#7f99b8');
+    labelNVS.scale.set(5.5, 1.5, 1);
+    labelNVS.position.set(32, 5.5, 0);
+    scene.add(labelNVS);
+
+    // 8.2 DÃY NGANG TẦNG 2 (Y = 10):
+    // [Phòng Máy 1 (32 MT + TV + MC)] | [Phòng Máy 2 (32 MT + TV + MC)] | [Cầu thang] | [Thư Viện (1 MT)]
+    function createSmartTV(x, y, z, rotY, roomName) {
+      const tvGeom = new THREE.BoxGeometry(4.0, 2.2, 0.15);
+      const tvMat = new THREE.MeshBasicMaterial({ color: 0x0077ff });
+      const tv = new THREE.Mesh(tvGeom, tvMat);
+      tv.position.set(x, y, z);
+      tv.rotation.y = rotY;
+      scene.add(tv);
+
+      registerInteractiveNode(tv, {
+        name: `Smart TV 75" 4K (${roomName})`,
+        type: 'SMART_DISPLAY_IOT',
+        ip: roomName.includes('PM1') ? '192.168.20.250' : '192.168.30.250',
+        location: roomName,
+        bandwidth: '100 Mbps',
+        status: 'ONLINE',
+        uplink: roomName.includes('PM1') ? 'Switch Phòng Máy 1' : 'Switch Phòng Máy 2',
+        downlink: 'Màn hình hiển thị giảng dạy',
+        category: 'labs'
+      });
+      return tv;
+    }
+
+    function createProjector(x, y, z, roomName) {
+      const projGeom = new THREE.BoxGeometry(0.8, 0.4, 0.8);
+      const projMat = new THREE.MeshStandardMaterial({ color: 0x223355 });
+      const proj = new THREE.Mesh(projGeom, projMat);
+      proj.position.set(x, y, z);
+
+      const coneGeom = new THREE.ConeGeometry(3.5, 7, 16, 1, true);
+      const coneMat = new THREE.MeshBasicMaterial({
+        color: 0x00f0ff,
+        transparent: true,
+        opacity: 0.12,
+        side: THREE.DoubleSide,
+        depthWrite: false
+      });
+      const cone = new THREE.Mesh(coneGeom, coneMat);
+      cone.rotation.x = Math.PI / 2 + 0.4;
+      cone.position.set(0, -1.8, 2.5);
+      proj.add(cone);
+
+      scene.add(proj);
+
+      registerInteractiveNode(proj, {
+        name: `Máy Chiếu Laser EPSON (${roomName})`,
+        type: 'SMART_PROJECTOR_IOT',
+        ip: roomName.includes('PM1') ? '192.168.20.251' : '192.168.30.251',
+        location: roomName,
+        bandwidth: '100 Mbps',
+        status: 'ONLINE',
+        uplink: roomName.includes('PM1') ? 'Switch Phòng Máy 1' : 'Switch Phòng Máy 2',
+        downlink: 'Trình chiếu giảng dạy',
+        category: 'labs'
+      });
+      return proj;
+    }
+
+    // PHÒNG MÁY 1 (32 MT + TV + MÁY CHIẾU)
+    createRoomBoundary(24, 6, 16, -18, 10, 0, 'Phòng Máy 1');
+    const labelPM1 = createLabelSprite('PHÒNG MÁY 1', '32 MÁY TRẠM + TV + MÁY CHIẾU', '#00f0ff');
+    labelPM1.position.set(-18, 17, 0);
+    scene.add(labelPM1);
+    createSmartTV(-29.5, 13.5, 0, Math.PI / 2, 'Phòng Máy 1');
+    createProjector(-18, 15.5, -3.5, 'Phòng Máy 1');
+    createCameraNode(-29, 14, 6, 'CAM-PM1', 'Phòng Máy 1');
+
+    for (let row = 0; row < 4; row++) {
+      for (let col = 0; col < 8; col++) {
+        const pcIndex = row * 8 + col + 1;
+        const px = -26.5 + col * 2.3;
+        const pz = -5.5 + row * 3.8;
+        createComputerWorkstation(px, 10, pz, `MT-${pcIndex}`, `192.168.20.${100 + pcIndex}`, 'Phòng Máy 1');
+      }
+    }
+
+    // PHÒNG MÁY 2 (32 MT + TV + MÁY CHIẾU)
+    createRoomBoundary(22, 6, 16, 7, 10, 0, 'Phòng Máy 2');
+    const labelPM2 = createLabelSprite('PHÒNG MÁY 2', '32 MÁY TRẠM + TV + MÁY CHIẾU', '#00f0ff');
+    labelPM2.position.set(7, 17, 0);
+    scene.add(labelPM2);
+    createSmartTV(17.5, 13.5, 0, -Math.PI / 2, 'Phòng Máy 2');
+    createProjector(7, 15.5, -3.5, 'Phòng Máy 2');
+    createCameraNode(-3.5, 14, 6, 'CAM-PM2', 'Phòng Máy 2');
+
+    for (let row = 0; row < 4; row++) {
+      for (let col = 0; col < 8; col++) {
+        const pcIndex = row * 8 + col + 1;
+        const px = -1.5 + col * 2.2;
+        const pz = -5.5 + row * 3.8;
+        createComputerWorkstation(px, 10, pz, `MT-${pcIndex}`, `192.168.30.${100 + pcIndex}`, 'Phòng Máy 2');
+      }
+    }
+
+    // Cầu thang Dãy Ngang T2
+    createStaircase(20, 10, 0, 5, 8, 10);
+    const labelStairNgang2 = createLabelSprite('CẦU THANG', 'TRỤC TRUNG TÂM T2-T3', '#0077ff');
+    labelStairNgang2.scale.set(5.5, 1.5, 1);
+    labelStairNgang2.position.set(20, 16, 0);
+    scene.add(labelStairNgang2);
+
+    // THƯ VIỆN (1 MT)
+    createRoomBoundary(12, 6, 16, 30, 10, 0, 'Thư Viện');
+    createComputerWorkstation(30, 10, 0, 'MT-Thư Viện', '192.168.10.50', 'Thư Viện');
+    const labelTV = createLabelSprite('THƯ VIỆN', '1 MT QUẢN LÝ SÁCH', '#00ff88');
+    labelTV.scale.set(6, 1.6, 1);
+    labelTV.position.set(30, 16, 0);
+    scene.add(labelTV);
+
+    // 8.3 DÃY NGANG TẦNG 3 (Y = 20):
+    // [3 Phòng Phụ / Kho] | [Cầu thang] | [Phòng TH Tiếng Anh (rộng)]
+    createRoomBoundary(10, 6, 16, -30, 20, 0, 'Phòng Phụ 1');
+    createRoomBoundary(10, 6, 16, -19, 20, 0, 'Phòng Phụ 2');
+    createRoomBoundary(10, 6, 16, -8, 20, 0, 'Phòng Phụ 3');
+    const labelPhu = createLabelSprite('KHU VỰC PHỤ TRỢ', 'CÁC PHÒNG CHỨC NĂNG', '#7f99b8');
+    labelPhu.position.set(-19, 26, 0);
+    scene.add(labelPhu);
+
+    const labelStairNgang3 = createLabelSprite('CẦU THANG', 'TẦNG 3', '#0077ff');
+    labelStairNgang3.scale.set(5.5, 1.5, 1);
+    labelStairNgang3.position.set(2, 26, 0);
+    scene.add(labelStairNgang3);
+
+    createRoomBoundary(28, 6, 16, 20, 20, 0, 'Phòng TH Tiếng Anh');
+    const labelTA = createLabelSprite('PHÒNG TH TIẾNG ANH', 'LAB NGOẠI NGỮ CHUYÊN DỤNG', '#a855f7');
+    labelTA.position.set(20, 26, 0);
+    scene.add(labelTA);
+
+    for (let c = 0; c < 6; c++) {
+      createComputerWorkstation(10 + c * 3.5, 20, 0, `MT-TA-${c + 1}`, `192.168.60.${10 + c}`, 'Phòng TH Tiếng Anh');
+    }
+
+    /* ==========================================================================
+       9. TUYẾN DÂY CÁP & XUNG DỮ LIỆU CHÍNH XÁC THEO SƠ ĐỒ
        ========================================================================== */
     function createCable(points, colorHex, radius, category, pulseSpeed = 1, pulseCount = 3) {
-      const CurveConstructor = THREE.CatmullRomCurve3 || THREE.CatmullRomCurve3D;
       const curve = new CurveConstructor(points, false, 'centripetal', 0.2);
       const tubeGeom = new THREE.TubeGeometry(curve, 64, radius, 8, false);
       const tubeMat = new THREE.MeshBasicMaterial({
@@ -1736,7 +1758,6 @@
       cableCurves.push({ curve, category });
       cableMeshes.push(tube);
 
-      // Data Flow Packets (Instanced Sprites / Glowing Spheres)
       for (let i = 0; i < pulseCount; i++) {
         const packetGeom = new THREE.SphereGeometry(radius * 2.2, 8, 8);
         const packetMat = new THREE.MeshBasicMaterial({
@@ -1758,109 +1779,110 @@
       return tube;
     }
 
-    // 6.1 VNPT -> ROUTER TRUNG TÂM (Cáp quang ngoại vi màu vàng hổ phách)
+    // 9.1 Cáp quang VNPT ngầm chạy từ dưới Dãy B lên thẳng Router & Cân bằng tải
     createCable([
-      new THREE.Vector3(-45, 2.5, 68),
-      new THREE.Vector3(-45, 3.5, 40),
+      new THREE.Vector3(-45, 2.5, 78),
+      new THREE.Vector3(-45, 3.5, 60),
       new THREE.Vector3(-45, 11, 20),
-      new THREE.Vector3(-45, 12, 5)
+      new THREE.Vector3(-45, 12.5, 5),
+      new THREE.Vector3(-36, 12.5, 0)
     ], 0xffaa00, 0.22, 'backbone', 1.8, 6);
 
-    // 6.2 ROUTER TRUNG TÂM -> HUB TỔNG DÃY B
+    // 9.2 Router Trung Tâm -> Hub Tổng
     createCable([
-      new THREE.Vector3(-45, 12.5, 5),
-      new THREE.Vector3(-45, 12.5, 7.5),
-      new THREE.Vector3(-45, 11, 10)
+      new THREE.Vector3(-35, 12.5, 0),
+      new THREE.Vector3(-31, 11.5, 0)
     ], 0x0077ff, 0.18, 'backbone', 2.0, 3);
 
-    // 6.3 HUB TỔNG DÃY B -> HUB DÃY NGANG T2 (TRỤC CHÍNH XUYÊN DÃY)
-    createCable([
-      new THREE.Vector3(-45, 11, 10),
-      new THREE.Vector3(-45, 12.8, 0),
-      new THREE.Vector3(-25, 12.8, 0),
-      new THREE.Vector3(0, 11.5, 0)
-    ], 0x0077ff, 0.22, 'backbone', 2.2, 8);
-
-    // 6.4 HUB TỔNG DÃY B -> CÁP NHÁNH PHÒNG 19 - 24
-    wingBRooms.forEach(rm => {
-      createCable([
-        new THREE.Vector3(-45, 11, 10),
-        new THREE.Vector3(-47, 12.2, (10 + rm.z) / 2),
-        new THREE.Vector3(-47, 11.5, rm.z),
-        new THREE.Vector3(-45, 10.8, rm.z)
-      ], 0x00f0ff, 0.09, 'distribution', 1.2, 2);
+    // 9.3 Từ Hub Tổng rẽ nhánh cáp phân phối Dãy B (Phòng 19 -> 24)
+    wingBRooms.forEach(item => {
+      if (item.isRoom) {
+        createCable([
+          new THREE.Vector3(-31, 11.5, 0),
+          new THREE.Vector3(-38, 12.5, item.z / 2),
+          new THREE.Vector3(-38, 11.5, item.z),
+          new THREE.Vector3(-45, 10.8, item.z)
+        ], 0x00f0ff, 0.09, 'distribution', 1.2, 2);
+      }
     });
 
-    // 6.5 HUB DÃY NGANG T2 -> SWITCH PHÒNG MÁY 1 & PHÒNG MÁY 2
+    // 9.4 Từ Hub Tổng chạy dọc trục Dãy Ngang Tầng 2
+    // Cấp Phòng Máy 1
     createCable([
-      new THREE.Vector3(0, 11.5, 0),
-      new THREE.Vector3(-10, 12.5, 0),
-      new THREE.Vector3(-20, 11, 0)
+      new THREE.Vector3(-31, 11.5, 0),
+      new THREE.Vector3(-25, 12.5, 0),
+      new THREE.Vector3(-18, 11, 0)
     ], 0x00f0ff, 0.16, 'labs', 1.8, 4);
 
+    // Cấp Phòng Máy 2
     createCable([
-      new THREE.Vector3(0, 11.5, 0),
-      new THREE.Vector3(9, 12.5, 0),
-      new THREE.Vector3(18, 11, 0)
+      new THREE.Vector3(-18, 11, 0),
+      new THREE.Vector3(-7, 12.5, 0),
+      new THREE.Vector3(4, 11, 0)
     ], 0x00f0ff, 0.16, 'labs', 1.8, 4);
 
-    // 6.6 HUB DÃY NGANG T2 -> THƯ VIỆN
+    // Cấp Thư Viện
     createCable([
-      new THREE.Vector3(0, 11.5, 0),
-      new THREE.Vector3(20, 12.5, 0),
-      new THREE.Vector3(31, 11, 0)
+      new THREE.Vector3(4, 11, 0),
+      new THREE.Vector3(18, 12.5, 0),
+      new THREE.Vector3(30, 11, 0)
     ], 0x00ff88, 0.1, 'distribution', 1.0, 2);
 
-    // 6.7 HUB DÃY NGANG T2 -> RISER TẦNG 1 (TH LÝ, TH HÓA)
+    // Cáp Riser xuống Tầng 1: Phòng TH Lí
     createCable([
-      new THREE.Vector3(0, 11.5, 0),
-      new THREE.Vector3(0, 5, 0),
-      new THREE.Vector3(18, 1, 0)
+      new THREE.Vector3(4, 11, 0),
+      new THREE.Vector3(4, 5, 0),
+      new THREE.Vector3(16, 1.5, 0)
     ], 0x00ff88, 0.1, 'distribution', 1.0, 2);
 
-    // 6.8 HUB DÃY NGANG T2 -> RISER TẦNG 3 (TH TIẾNG ANH)
+    // Cáp Riser lên Tầng 3: Phòng TH Tiếng Anh
     createCable([
-      new THREE.Vector3(0, 11.5, 0),
-      new THREE.Vector3(0, 18, 0),
-      new THREE.Vector3(0, 20.8, 0)
+      new THREE.Vector3(4, 11, 0),
+      new THREE.Vector3(4, 17, 0),
+      new THREE.Vector3(20, 21, 0)
     ], 0xa855f7, 0.12, 'distribution', 1.2, 3);
 
-    // 6.9 HUB DÃY NGANG T2 -> CÁP TRỤC XUYÊN SANG DÃY A T1 & T2
+    // 9.5 Tuyến cáp trục xuyên khối sang Dãy A
+    // Sang Switch Dãy A Tầng 2
     createCable([
-      new THREE.Vector3(0, 11.5, 0),
-      new THREE.Vector3(25, 12.5, 0),
-      new THREE.Vector3(45, 12.5, 2),
-      new THREE.Vector3(45, 11, 5)
+      new THREE.Vector3(30, 11, 0),
+      new THREE.Vector3(38, 12.5, 0),
+      new THREE.Vector3(45, 11, 0)
     ], 0x0077ff, 0.18, 'backbone', 1.8, 5);
 
+    // Sang Switch Dãy A Tầng 1
     createCable([
-      new THREE.Vector3(45, 11, 5),
-      new THREE.Vector3(45, 5, 5),
-      new THREE.Vector3(45, 1.5, 5)
+      new THREE.Vector3(45, 11, 0),
+      new THREE.Vector3(45, 5, 0),
+      new THREE.Vector3(45, 1.5, 0)
     ], 0x0077ff, 0.16, 'backbone', 1.5, 3);
 
-    // 6.10 SWITCH DÃY A T1 -> PHÒNG 1 - 6
-    wingAZ.forEach(zPos => {
-      createCable([
-        new THREE.Vector3(45, 1.5, 5),
-        new THREE.Vector3(43, 3, (5 + zPos) / 2),
-        new THREE.Vector3(43, 2, zPos),
-        new THREE.Vector3(45, 0.8, zPos)
-      ], 0x00f0ff, 0.08, 'distribution', 1.1, 2);
+    // Cáp nhánh từ Switch Dãy A T1 đến Phòng 6 -> Phòng 1
+    wingAT1.forEach(item => {
+      if (item.isRoom) {
+        createCable([
+          new THREE.Vector3(45, 1.5, 0),
+          new THREE.Vector3(38, 3, item.z / 2),
+          new THREE.Vector3(38, 2, item.z),
+          new THREE.Vector3(45, 0.8, item.z)
+        ], 0x00f0ff, 0.08, 'distribution', 1.1, 2);
+      }
     });
 
-    // 6.11 SWITCH DÃY A T2 -> PHÒNG 7 - 12
-    wingAZ.forEach(zPos => {
-      createCable([
-        new THREE.Vector3(45, 11, 5),
-        new THREE.Vector3(43, 12.5, (5 + zPos) / 2),
-        new THREE.Vector3(43, 11.8, zPos),
-        new THREE.Vector3(45, 10.8, zPos)
-      ], 0x00f0ff, 0.08, 'distribution', 1.1, 2);
+    // Cáp nhánh từ Switch Dãy A T2 đến Phòng 7 -> Phòng 12
+    wingAT2.forEach(item => {
+      if (item.isRoom) {
+        createCable([
+          new THREE.Vector3(45, 11, 0),
+          new THREE.Vector3(38, 12.5, item.z / 2),
+          new THREE.Vector3(38, 11.8, item.z),
+          new THREE.Vector3(45, 10.8, item.z)
+        ], 0x00f0ff, 0.08, 'distribution', 1.1, 2);
+      }
     });
 
     /* ==========================================================================
-       7. INTERACTION: RAYCASTING, GSAP CAMERA ZOOM & SELECTION
+       10. TƯƠNG TÁC RAYCASTING, INSPECTOR & CAMERA TRANSITIONS
        ========================================================================== */
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
@@ -1899,7 +1921,6 @@
     }
 
     function onPointerDown(event) {
-      // Ignore clicks on UI overlays
       if (event.target.closest('header, .left-controls, .inspector-sidebar, .bottom-hud')) {
         return;
       }
@@ -1922,7 +1943,6 @@
     window.addEventListener('pointermove', onPointerMove);
     window.addEventListener('pointerdown', onPointerDown);
 
-    // Audio SFX (Web Audio API Synthesizer - 100% offline)
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function playBeep(freq = 880, duration = 0.08, type = 'sine') {
       try {
@@ -1940,23 +1960,19 @@
       } catch (e) {}
     }
 
-    // Select & Focus Node
     function selectNode(obj) {
       state.selectedNode = obj;
       playBeep(1040, 0.1, 'triangle');
 
-      // Update Inspector UI
       updateInspectorData(obj.userData);
       document.getElementById('inspector-sidebar').classList.add('active');
 
-      // Position Selection Halo Ring
       const worldPos = new THREE.Vector3();
       obj.getWorldPosition(worldPos);
       selectionRing.position.copy(worldPos);
       selectionRing.position.y += 0.2;
       selectionRing.visible = true;
 
-      // GSAP Smooth Camera Focus Animation
       const targetCamPos = worldPos.clone().add(new THREE.Vector3(14, 12, 18));
       gsap.to(camera.position, {
         x: targetCamPos.x,
@@ -1975,9 +1991,6 @@
       });
     }
 
-    /* ==========================================================================
-       8. SIDEBAR INSPECTION DATA & CCTV CANVAS SIMULATOR
-       ========================================================================== */
     function updateInspectorData(data) {
       document.getElementById('node-name').textContent = data.name;
       document.getElementById('node-type').textContent = `${data.type} // ${data.location.toUpperCase()}`;
@@ -1986,12 +1999,10 @@
       document.getElementById('spec-bandwidth').textContent = data.bandwidth;
       document.getElementById('spec-perf').textContent = data.isCamera ? '30 FPS // 42°C' : '18% CPU // 39°C';
 
-      // Uplink / Downlink
       document.getElementById('topo-uplink-name').textContent = data.uplink;
       document.getElementById('topo-current-name').textContent = data.name;
       document.getElementById('topo-downlink-name').textContent = data.downlink;
 
-      // Show CCTV Feed only if camera is clicked
       const cctvBox = document.getElementById('cctv-preview');
       if (data.isCamera) {
         cctvBox.classList.add('active');
@@ -2001,14 +2012,12 @@
       }
     }
 
-    // Close Inspector
     document.getElementById('btn-close-inspector').addEventListener('click', () => {
       document.getElementById('inspector-sidebar').classList.remove('active');
       selectionRing.visible = false;
       state.selectedNode = null;
     });
 
-    // Click on Uplink / Downlink link to navigate to that node in 3D
     document.getElementById('topo-uplink-name').addEventListener('click', () => {
       if (!state.selectedNode) return;
       const targetName = state.selectedNode.userData.uplink;
@@ -2042,7 +2051,6 @@
       const w = chartCanvas.width;
       const h = chartCanvas.height;
 
-      // Append new random traffic fluctuation
       const last = trafficHistory[trafficHistory.length - 1];
       const next = Math.max(8, Math.min(h - 5, last + (Math.random() - 0.5) * 16));
       trafficHistory.shift();
@@ -2050,14 +2058,12 @@
 
       chartCtx.clearRect(0, 0, w, h);
 
-      // Gridlines
       chartCtx.strokeStyle = 'rgba(0, 240, 255, 0.1)';
       chartCtx.lineWidth = 1;
       chartCtx.beginPath();
       chartCtx.moveTo(0, h / 2); chartCtx.lineTo(w, h / 2);
       chartCtx.stroke();
 
-      // Waveform line
       chartCtx.strokeStyle = '#00f0ff';
       chartCtx.lineWidth = 2;
       chartCtx.beginPath();
@@ -2070,7 +2076,6 @@
       });
       chartCtx.stroke();
 
-      // Gradient Fill under curve
       chartCtx.lineTo(w, h);
       chartCtx.lineTo(0, h);
       chartCtx.closePath();
@@ -2080,12 +2085,10 @@
       chartCtx.fillStyle = grad;
       chartCtx.fill();
 
-      // Update Rate Text
       const kbVal = Math.round(next * 28);
       document.getElementById('chart-rate').textContent = `${kbVal} KB/s`;
     }
 
-    // Header Sparkline Canvas
     const sparkCanvas = document.getElementById('sparkline');
     const sparkCtx = sparkCanvas.getContext('2d');
     sparkCanvas.width = 80;
@@ -2111,7 +2114,6 @@
       sparkCtx.stroke();
     }
 
-    // Simulated CCTV Canvas Static Noise
     const cctvCanvas = document.getElementById('cctv-canvas');
     const cctvCtx = cctvCanvas.getContext('2d');
     cctvCanvas.width = 300;
@@ -2123,13 +2125,11 @@
       const imgData = cctvCtx.createImageData(w, h);
       const buffer = new Uint32Array(imgData.data.buffer);
       for (let i = 0; i < buffer.length; i++) {
-        // CRT noise grain
         const noise = (Math.random() * 55) | 0;
         buffer[i] = (255 << 24) | (noise << 16) | (noise << 8) | (noise + 20);
       }
       cctvCtx.putImageData(imgData, 0, 0);
 
-      // Cyber Grid & Timestamp
       cctvCtx.fillStyle = 'rgba(255, 51, 102, 0.8)';
       cctvCtx.font = '11px Share Tech Mono, monospace';
       const now = new Date();
@@ -2137,7 +2137,7 @@
     }
 
     /* ==========================================================================
-       9. FILTER MODES & CAMERA PRESET HANDLERS
+       11. FILTER MODES & CAMERA PRESET HANDLERS
        ========================================================================== */
     function setFilterMode(mode) {
       state.filterMode = mode;
@@ -2147,7 +2147,6 @@
       const activeBtn = document.getElementById(`btn-mode-${mode}`);
       if (activeBtn) activeBtn.classList.add('active');
 
-      // Update visibilities based on filter
       interactiveObjects.forEach(obj => {
         const cat = obj.userData.category;
         if (mode === 'all') {
@@ -2161,7 +2160,6 @@
         }
       });
 
-      // Update Cable Visibilities
       cableCurves.forEach((item, idx) => {
         const mesh = cableMeshes[idx];
         if (mode === 'all') {
@@ -2175,15 +2173,14 @@
         }
       });
 
-      // Animate Camera to suit mode
       if (mode === 'labs') {
-        flyCameraTo(new THREE.Vector3(0, 32, 28), new THREE.Vector3(0, 10, 0));
+        flyCameraTo(new THREE.Vector3(-5, 36, 28), new THREE.Vector3(-5, 10, 0));
       } else if (mode === 'cctv') {
-        flyCameraTo(new THREE.Vector3(-30, 40, 60), new THREE.Vector3(-10, 10, 35));
+        flyCameraTo(new THREE.Vector3(-30, 45, 60), new THREE.Vector3(-10, 10, 32));
       } else if (mode === 'backbone') {
-        flyCameraTo(new THREE.Vector3(-45, 35, 45), new THREE.Vector3(-25, 10, 15));
+        flyCameraTo(new THREE.Vector3(-45, 40, 45), new THREE.Vector3(-25, 10, 15));
       } else {
-        flyCameraTo(new THREE.Vector3(70, 65, 95), new THREE.Vector3(0, 8, 25));
+        flyCameraTo(new THREE.Vector3(75, 75, 95), new THREE.Vector3(0, 10, 32));
       }
     }
 
@@ -2213,19 +2210,22 @@
 
     // Camera Presets
     document.getElementById('btn-cam-iso').addEventListener('click', () => {
-      flyCameraTo(new THREE.Vector3(70, 65, 95), new THREE.Vector3(0, 8, 25));
+      flyCameraTo(new THREE.Vector3(75, 75, 95), new THREE.Vector3(0, 10, 32));
     });
     document.getElementById('btn-cam-wing-b').addEventListener('click', () => {
-      flyCameraTo(new THREE.Vector3(-65, 30, 50), new THREE.Vector3(-45, 10, 35));
+      flyCameraTo(new THREE.Vector3(-75, 35, 45), new THREE.Vector3(-45, 10, 32));
     });
     document.getElementById('btn-cam-center').addEventListener('click', () => {
-      flyCameraTo(new THREE.Vector3(0, 38, 35), new THREE.Vector3(0, 10, 0));
+      flyCameraTo(new THREE.Vector3(0, 42, 35), new THREE.Vector3(0, 10, 0));
     });
     document.getElementById('btn-cam-wing-a').addEventListener('click', () => {
-      flyCameraTo(new THREE.Vector3(65, 30, 50), new THREE.Vector3(45, 10, 35));
+      flyCameraTo(new THREE.Vector3(75, 35, 45), new THREE.Vector3(45, 10, 32));
     });
+
+    // 2D TOP-DOWN SCHEMATIC VIEW (EXACT MATCH WITH UPLOADED BLUEPRINT)
     document.getElementById('btn-cam-top').addEventListener('click', () => {
-      flyCameraTo(new THREE.Vector3(0, 130, 25), new THREE.Vector3(0, 0, 25), 1.8);
+      playBeep(920, 0.1, 'sine');
+      flyCameraTo(new THREE.Vector3(0, 160, 32), new THREE.Vector3(0, 0, 32), 1.8);
     });
 
     // Layer Toggles
@@ -2247,7 +2247,6 @@
       controls.autoRotateSpeed = 0.8;
     });
 
-    // Action Buttons in Inspector
     document.getElementById('btn-action-ping').addEventListener('click', () => {
       playBeep(1200, 0.15, 'sawtooth');
       const pingBtn = document.getElementById('btn-action-ping');
@@ -2267,7 +2266,7 @@
     });
 
     /* ==========================================================================
-       10. ANIMATION & RENDER LOOP
+       12. ANIMATION & RENDER LOOP
        ========================================================================== */
     const clock = new THREE.Clock();
     let chartTimer = 0;
@@ -2278,23 +2277,19 @@
       const delta = clock.getDelta();
       const time = clock.getElapsedTime();
 
-      // OrbitControls update
       controls.update();
 
-      // Rotate VNPT laser rings & beacon pulse
       if (vnptPylon) {
         vnptPylon.ring1.rotation.z = time * 1.5;
         vnptPylon.ring2.rotation.z = -time * 1.2;
         pointLightVNPT.intensity = 1.8 + Math.sin(time * 5) * 0.5;
       }
 
-      // CCTV Camera Cone scanning oscillation
       cameraCones.forEach((cam, i) => {
         const sweep = Math.sin(time * 1.2 + i * 0.7) * 0.45;
         cam.group.rotation.y = sweep;
       });
 
-      // Router Status LED Flickering (Network packet activity simulation)
       if (routerLEDs.length > 0 && Math.random() > 0.3) {
         for (let i = 0; i < 5; i++) {
           const randIdx = Math.floor(Math.random() * routerLEDs.length);
@@ -2302,14 +2297,12 @@
         }
       }
 
-      // Animate Selection Halo
       if (selectionRing.visible) {
         selectionRing.rotation.z = time * 2;
         const scaleVal = 1 + Math.sin(time * 6) * 0.08;
         selectionRing.scale.set(scaleVal, scaleVal, 1);
       }
 
-      // Animate Data Flow Packets along 3D curves
       if (state.particlesEnabled) {
         dataPackets.forEach(pkt => {
           pkt.progress = (pkt.progress + pkt.speed) % 1;
@@ -2318,15 +2311,13 @@
         });
       }
 
-      // Drift floating space dust
       const positions = dustParticles.geometry.attributes.position.array;
       for (let i = 1; i < dustPositions.length; i += 3) {
         positions[i] -= 0.04;
-        if (positions[i] < 0) positions[i] = 50;
+        if (positions[i] < 0) positions[i] = 55;
       }
       dustParticles.geometry.attributes.position.needsUpdate = true;
 
-      // Update 2D Canvas monitors periodically
       chartTimer += delta;
       if (chartTimer > 0.06) {
         chartTimer = 0;
@@ -2341,9 +2332,6 @@
     }
     animate();
 
-    /* ==========================================================================
-       11. RESPONSIVE RESIZE HANDLING
-       ========================================================================== */
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
