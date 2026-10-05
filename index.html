@@ -1181,17 +1181,101 @@
       return roomGroup;
     }
 
-    function createStaircaseShaft(width, depth, x, z, y = 0, height = 10, targetGroup = scene) {
+    function createStaircaseShaft(width, depth, x, z, y = 0, height = 10, targetGroup = scene, direction = 'Z') {
       const stairGroup = new THREE.Group();
       stairGroup.position.set(x, y, z);
-      const steps = 12;
-      const stepGeom = new THREE.BoxGeometry(width, height / steps, depth / steps);
-      const stepMat = new THREE.MeshBasicMaterial({ color: 0x0077ff, transparent: true, opacity: 0.45 });
-      for (let i = 0; i < steps; i++) {
-        const step = new THREE.Mesh(stepGeom, stepMat);
-        step.position.set(0, (i + 0.5) * (height / steps), (i - steps / 2) * (depth / steps));
-        stairGroup.add(step);
+      const steps = 14;
+
+      if (direction === '+X') {
+        // CẦU THANG DÃY B: QUAY VÀO PHÍA TRONG (HƯỚNG TỪ NGOÀI VÀO SÂN TRƯỜNG VỀ PHÍA +X)
+        const stepW = (width * 0.82) / steps;
+        const stepD = depth * 0.85;
+        const stepH = height / steps;
+        const stepGeom = new THREE.BoxGeometry(stepW * 0.95, stepH * 0.5, stepD);
+        const stepMat = new THREE.MeshBasicMaterial({ color: 0x00d4ff, transparent: true, opacity: 0.6 });
+
+        for (let i = 0; i < steps; i++) {
+          const step = new THREE.Mesh(stepGeom, stepMat);
+          const posX = (i - steps / 2 + 0.5) * stepW;
+          const posY = (i + 0.5) * stepH;
+          step.position.set(posX, posY, 0);
+          stairGroup.add(step);
+        }
+
+        // Chiếu nghỉ trên mép trong (tiếp giáp hành lang sân trường tại +X)
+        const landingGeom = new THREE.BoxGeometry(width * 0.18, 0.35, stepD);
+        const landingMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.7 });
+        const topLanding = new THREE.Mesh(landingGeom, landingMat);
+        topLanding.position.set(width * 0.41, height, 0);
+        stairGroup.add(topLanding);
+
+        // Chiếu nghỉ tầng dưới tại -X
+        const botLanding = new THREE.Mesh(landingGeom, landingMat);
+        botLanding.position.set(-width * 0.41, 0.18, 0);
+        stairGroup.add(botLanding);
+
+        // Lan can neon Cyber 2 bên
+        const railMat = new THREE.LineBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.8 });
+        [-stepD / 2, stepD / 2].forEach(rz => {
+          const railGeom = new THREE.BufferGeometry().setFromPoints([
+            new THREE.Vector3(-width * 0.42, 0.9, rz),
+            new THREE.Vector3(width * 0.42, height + 0.9, rz)
+          ]);
+          stairGroup.add(new THREE.Line(railGeom, railMat));
+        });
+
+      } else if (direction === '-X') {
+        // CẦU THANG DÃY A: QUAY VÀO PHÍA TRONG (HƯỚNG TỪ NGOÀI VÀO SÂN TRƯỜNG VỀ PHÍA -X)
+        const stepW = (width * 0.82) / steps;
+        const stepD = depth * 0.85;
+        const stepH = height / steps;
+        const stepGeom = new THREE.BoxGeometry(stepW * 0.95, stepH * 0.5, stepD);
+        const stepMat = new THREE.MeshBasicMaterial({ color: 0x00d4ff, transparent: true, opacity: 0.6 });
+
+        for (let i = 0; i < steps; i++) {
+          const step = new THREE.Mesh(stepGeom, stepMat);
+          const posX = -(i - steps / 2 + 0.5) * stepW;
+          const posY = (i + 0.5) * stepH;
+          step.position.set(posX, posY, 0);
+          stairGroup.add(step);
+        }
+
+        // Chiếu nghỉ trên mép trong (tiếp giáp hành lang sân trường tại -X)
+        const landingGeom = new THREE.BoxGeometry(width * 0.18, 0.35, stepD);
+        const landingMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.7 });
+        const topLanding = new THREE.Mesh(landingGeom, landingMat);
+        topLanding.position.set(-width * 0.41, height, 0);
+        stairGroup.add(topLanding);
+
+        // Chiếu nghỉ tầng dưới tại +X
+        const botLanding = new THREE.Mesh(landingGeom, landingMat);
+        botLanding.position.set(width * 0.41, 0.18, 0);
+        stairGroup.add(botLanding);
+
+        // Lan can neon Cyber 2 bên
+        const railMat = new THREE.LineBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.8 });
+        [-stepD / 2, stepD / 2].forEach(rz => {
+          const railGeom = new THREE.BufferGeometry().setFromPoints([
+            new THREE.Vector3(width * 0.42, 0.9, rz),
+            new THREE.Vector3(-width * 0.42, height + 0.9, rz)
+          ]);
+          stairGroup.add(new THREE.Line(railGeom, railMat));
+        });
+
+      } else {
+        // CẦU THANG TRỤC DÃY NGANG (HƯỚNG TRỤC Z)
+        const stepW = width * 0.85;
+        const stepD = (depth * 0.85) / steps;
+        const stepH = height / steps;
+        const stepGeom = new THREE.BoxGeometry(stepW, stepH * 0.5, stepD);
+        const stepMat = new THREE.MeshBasicMaterial({ color: 0x0077ff, transparent: true, opacity: 0.5 });
+        for (let i = 0; i < steps; i++) {
+          const step = new THREE.Mesh(stepGeom, stepMat);
+          step.position.set(0, (i + 0.5) * stepH, (i - steps / 2 + 0.5) * stepD);
+          stairGroup.add(step);
+        }
       }
+
       targetGroup.add(stairGroup);
       return stairGroup;
     }
@@ -1439,6 +1523,41 @@
       return group;
     }
 
+    function createCable(points, colorHex, radius, category, pulseSpeed = 1, pulseCount = 3, tubeSegments = 48, targetGroup = scene) {
+      const curve = new CurveConstructor(points, false, 'centripetal', 0.2);
+      const tubeGeom = new THREE.TubeGeometry(curve, tubeSegments, radius, 8, false);
+      const tubeMat = new THREE.MeshBasicMaterial({
+        color: colorHex,
+        transparent: true,
+        opacity: 0.82
+      });
+      const tube = new THREE.Mesh(tubeGeom, tubeMat);
+      targetGroup.add(tube);
+
+      cableCurves.push({ curve, category });
+      cableMeshes.push(tube);
+
+      for (let i = 0; i < pulseCount; i++) {
+        const packetGeom = new THREE.SphereGeometry(radius * 2.2, 8, 8);
+        const packetMat = new THREE.MeshBasicMaterial({
+          color: colorHex,
+          blending: THREE.AdditiveBlending
+        });
+        const packet = new THREE.Mesh(packetGeom, packetMat);
+        targetGroup.add(packet);
+
+        dataPackets.push({
+          mesh: packet,
+          curve,
+          category,
+          progress: i / pulseCount,
+          speed: 0.003 * pulseSpeed
+        });
+      }
+
+      return tube;
+    }
+
     /* ==========================================================================
        KIẾN TRÚC PHÂN TẦNG KHÔNG GIAN 3D ĐÚNG CHUẨN BẢN VẼ
        ========================================================================== */
@@ -1520,14 +1639,51 @@
       category: 'labs'
     });
 
+    // Cáp kết nối từ Switch PM1 tới Smart TV 75"
+    createCable([
+      new THREE.Vector3(-33, 10.6, 0),
+      new THREE.Vector3(-33.5, 11.5, 0),
+      new THREE.Vector3(-33.5, 12.5, 0)
+    ], 0x00f0ff, 0.035, 'labs', 1.2, 1, 10, floorGroups[2]);
+
+    // Trục máng cáp phân phối chính (Spine) chạy dọc hành lang phòng máy 1
+    createCable([
+      new THREE.Vector3(-33, 10.4, 0),
+      new THREE.Vector3(-32.8, 10.12, 0),
+      new THREE.Vector3(-32.8, 10.12, -6)
+    ], 0x00d4ff, 0.065, 'labs', 1.5, 2, 14, floorGroups[2]);
+
+    createCable([
+      new THREE.Vector3(-32.8, 10.12, 0),
+      new THREE.Vector3(-32.8, 10.12, 6)
+    ], 0x00d4ff, 0.065, 'labs', 1.5, 2, 14, floorGroups[2]);
+
     const lblPM1 = createLabelSprite('PHÒNG MÁY 1', '32 MT + TV + MÁY CHIẾU', '#00f0ff', 7, 2.0);
     lblPM1.position.set(-25, 15.5, 0);
     floorGroups[2].add(lblPM1);
 
+    // 4 Dãy bàn máy tính + Máng cáp ngang + 32 Đường dẫn nhỏ (Drop Cables) tới từng máy
     for (let r = 0; r < 4; r++) {
+      const rowZ = -6 + r * 4.0;
+      // Tuyến máng cáp ngầm đi sau dãy bàn
+      createCable([
+        new THREE.Vector3(-32.8, 10.12, rowZ),
+        new THREE.Vector3(-32.8, 10.12, rowZ - 0.28),
+        new THREE.Vector3(-19.0, 10.12, rowZ - 0.28)
+      ], 0x00d4ff, 0.042, 'labs', 1.4, 2, 16, floorGroups[2]);
+
       for (let c = 0; c < 8; c++) {
         const pcNum = r * 8 + c + 1;
-        createComputerWorkstation(-32 + c * 1.8, -6 + r * 4.0, 10, `MT-${pcNum}`, `192.168.20.${100 + pcNum}`, 'Phòng Máy 1', floorGroups[2]);
+        const pcX = -32 + c * 1.8;
+        createComputerWorkstation(pcX, rowZ, 10, `MT-${pcNum}`, `192.168.20.${100 + pcNum}`, 'Phòng Máy 1', floorGroups[2]);
+
+        // Đường dẫn nhỏ (Branch drop cable) đấu từ máng cáp vào sau thùng máy PC
+        const dropPts = [
+          new THREE.Vector3(pcX + 0.35, 10.12, rowZ - 0.28),
+          new THREE.Vector3(pcX + 0.35, 10.18, rowZ - 0.18),
+          new THREE.Vector3(pcX + 0.35, 10.28, rowZ - 0.12)
+        ];
+        createCable(dropPts, 0x00f0ff, 0.022, 'labs', 1.8, 1, 8, floorGroups[2]);
       }
     }
 
@@ -1550,14 +1706,51 @@
       category: 'labs'
     });
 
+    // Cáp kết nối từ Switch PM2 tới Smart TV 75"
+    createCable([
+      new THREE.Vector3(-14, 10.6, 0),
+      new THREE.Vector3(-14.5, 11.5, 0),
+      new THREE.Vector3(-14.5, 12.5, 0)
+    ], 0x38bdf8, 0.035, 'labs', 1.2, 1, 10, floorGroups[2]);
+
+    // Trục máng cáp phân phối chính (Spine) chạy dọc hành lang phòng máy 2
+    createCable([
+      new THREE.Vector3(-14, 10.4, 0),
+      new THREE.Vector3(-13.8, 10.12, 0),
+      new THREE.Vector3(-13.8, 10.12, -6)
+    ], 0x38bdf8, 0.065, 'labs', 1.5, 2, 14, floorGroups[2]);
+
+    createCable([
+      new THREE.Vector3(-13.8, 10.12, 0),
+      new THREE.Vector3(-13.8, 10.12, 6)
+    ], 0x38bdf8, 0.065, 'labs', 1.5, 2, 14, floorGroups[2]);
+
     const lblPM2 = createLabelSprite('PHÒNG MÁY 2', '32 MT + TV + MÁY CHIẾU', '#00f0ff', 7, 2.0);
     lblPM2.position.set(-6, 15.5, 0);
     floorGroups[2].add(lblPM2);
 
+    // 4 Dãy bàn máy tính + Máng cáp ngang + 32 Đường dẫn nhỏ (Drop Cables) tới từng máy
     for (let r = 0; r < 4; r++) {
+      const rowZ = -6 + r * 4.0;
+      // Tuyến máng cáp ngầm đi sau dãy bàn
+      createCable([
+        new THREE.Vector3(-13.8, 10.12, rowZ),
+        new THREE.Vector3(-13.8, 10.12, rowZ - 0.28),
+        new THREE.Vector3(-0.0, 10.12, rowZ - 0.28)
+      ], 0x38bdf8, 0.042, 'labs', 1.4, 2, 16, floorGroups[2]);
+
       for (let c = 0; c < 8; c++) {
         const pcNum = r * 8 + c + 1;
-        createComputerWorkstation(-13 + c * 1.8, -6 + r * 4.0, 10, `MT-${pcNum}`, `192.168.30.${100 + pcNum}`, 'Phòng Máy 2', floorGroups[2]);
+        const pcX = -13 + c * 1.8;
+        createComputerWorkstation(pcX, rowZ, 10, `MT-${pcNum}`, `192.168.30.${100 + pcNum}`, 'Phòng Máy 2', floorGroups[2]);
+
+        // Đường dẫn nhỏ (Branch drop cable) đấu từ máng cáp vào sau thùng máy PC
+        const dropPts = [
+          new THREE.Vector3(pcX + 0.35, 10.12, rowZ - 0.28),
+          new THREE.Vector3(pcX + 0.35, 10.18, rowZ - 0.18),
+          new THREE.Vector3(pcX + 0.35, 10.28, rowZ - 0.12)
+        ];
+        createCable(dropPts, 0x38bdf8, 0.022, 'labs', 1.8, 1, 8, floorGroups[2]);
       }
     }
 
@@ -1618,8 +1811,8 @@
         lbl.position.set(wingB_X, 15.0, bay.z);
         floorGroups[2].add(lbl);
       } else if (bay.isStair) {
-        createStaircaseShaft(wingB_W, 7.5, wingB_X, bay.z, 0, 10, floorGroups[1]);
-        const lbl = createLabelSprite('CẦU THANG', 'DÃY B', '#0077ff', 5, 1.5);
+        createStaircaseShaft(wingB_W, 7.5, wingB_X, bay.z, 0, 10, floorGroups[1], '+X');
+        const lbl = createLabelSprite('CẦU THANG B', 'HƯỚNG SÂN TRƯỜNG', '#00f0ff', 6, 1.8);
         lbl.position.set(wingB_X, 15.0, bay.z);
         floorGroups[2].add(lbl);
       }
@@ -1658,8 +1851,8 @@
         lbl.position.set(wingA_X, 5.0, bay.z);
         floorGroups[1].add(lbl);
       } else if (bay.isStair) {
-        createStaircaseShaft(wingA_W, 7.5, wingA_X, bay.z, 0, 10, floorGroups[1]);
-        const lbl = createLabelSprite('CẦU THANG', 'DÃY A T1-T2', '#0077ff', 5, 1.5);
+        createStaircaseShaft(wingA_W, 7.5, wingA_X, bay.z, 0, 10, floorGroups[1], '-X');
+        const lbl = createLabelSprite('CẦU THANG A', 'HƯỚNG SÂN TRƯỜNG', '#00f0ff', 6, 1.8);
         lbl.position.set(wingA_X, 5.0, bay.z);
         floorGroups[1].add(lbl);
       }
@@ -1686,46 +1879,16 @@
         const lbl = createLabelSprite(bay.name, '1 MT + 1 CAMERA', '#00f0ff', 6, 1.8);
         lbl.position.set(wingA_X, 15.0, bay.z);
         floorGroups[2].add(lbl);
+      } else if (bay.isStair) {
+        const lbl = createLabelSprite('CẦU THANG A', 'HƯỚNG SÂN TRƯỜNG', '#00f0ff', 6, 1.8);
+        lbl.position.set(wingA_X, 15.0, bay.z);
+        floorGroups[2].add(lbl);
       }
     });
 
     /* ==========================================================================
        TUYẾN ĐƯỜNG CÁP QUANG VÀ XUNG DỮ LIỆU
        ========================================================================== */
-    function createCable(points, colorHex, radius, category, pulseSpeed = 1, pulseCount = 3) {
-      const curve = new CurveConstructor(points, false, 'centripetal', 0.2);
-      const tubeGeom = new THREE.TubeGeometry(curve, 64, radius, 8, false);
-      const tubeMat = new THREE.MeshBasicMaterial({
-        color: colorHex,
-        transparent: true,
-        opacity: 0.8
-      });
-      const tube = new THREE.Mesh(tubeGeom, tubeMat);
-      scene.add(tube);
-
-      cableCurves.push({ curve, category });
-      cableMeshes.push(tube);
-
-      for (let i = 0; i < pulseCount; i++) {
-        const packetGeom = new THREE.SphereGeometry(radius * 2.2, 8, 8);
-        const packetMat = new THREE.MeshBasicMaterial({
-          color: colorHex,
-          blending: THREE.AdditiveBlending
-        });
-        const packet = new THREE.Mesh(packetGeom, packetMat);
-        scene.add(packet);
-
-        dataPackets.push({
-          mesh: packet,
-          curve,
-          category,
-          progress: i / pulseCount,
-          speed: 0.003 * pulseSpeed
-        });
-      }
-
-      return tube;
-    }
 
     // 1. Cáp quang ngầm VNPT -> Router Trung Tâm (Dãy B T2)
     createCable([
@@ -2131,6 +2294,18 @@
           mesh.visible = (item.category === 'cctv' || item.category === 'backbone');
         }
       });
+
+      dataPackets.forEach(pkt => {
+        if (mode === 'all') {
+          pkt.mesh.visible = true;
+        } else if (mode === 'backbone') {
+          pkt.mesh.visible = (pkt.category === 'backbone');
+        } else if (mode === 'labs') {
+          pkt.mesh.visible = (pkt.category === 'labs' || pkt.category === 'backbone');
+        } else if (mode === 'cctv') {
+          pkt.mesh.visible = (pkt.category === 'cctv' || pkt.category === 'backbone');
+        }
+      });
     }
 
     function flyCameraTo(camPos, targetPos, duration = 1.6) {
@@ -2253,6 +2428,7 @@
 
       if (state.particlesEnabled) {
         dataPackets.forEach(pkt => {
+          if (!pkt.mesh.visible) return;
           pkt.progress = (pkt.progress + pkt.speed) % 1;
           const pos = pkt.curve.getPointAt(pkt.progress);
           pkt.mesh.position.copy(pos);
