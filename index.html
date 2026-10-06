@@ -1028,7 +1028,7 @@
     scene.add(dirLight);
 
     const pointLightVNPT = new THREE.PointLight(0xffaa00, 2.5, 60);
-    pointLightVNPT.position.set(-51, 3, 75);
+    pointLightVNPT.position.set(0, 3, 75);
     scene.add(pointLightVNPT);
 
     const pointLightRouter = new THREE.PointLight(0x00f0ff, 2.5, 60);
@@ -1134,20 +1134,23 @@
       transmission: 0.6,
       opacity: 0.55,
       transparent: true,
-      side: THREE.DoubleSide
+      side: THREE.DoubleSide,
+      depthWrite: false
     });
 
     const roomWallMat = new THREE.MeshBasicMaterial({
       color: 0x00f0ff,
       transparent: true,
       opacity: 0.08,
-      side: THREE.DoubleSide
+      side: THREE.DoubleSide,
+      depthWrite: false
     });
 
     const edgeLineMat = new THREE.LineBasicMaterial({
       color: 0x00f0ff,
       transparent: true,
-      opacity: 0.85
+      opacity: 0.85,
+      depthWrite: false
     });
 
     function createRoomBox(width, depth, x, z, y = 0, height = 4.0, targetGroup = scene) {
@@ -1438,33 +1441,102 @@
       return { group, rack };
     }
 
-    function createSwitchBox(x, z, y = 10, name = 'Switch', ip = '192.168.1.2', location = 'Dãy Ngang', downlink = '', targetGroup = scene) {
-      const boxGeom = new THREE.BoxGeometry(2.2, 0.8, 1.4);
-      const boxMat = new THREE.MeshStandardMaterial({ color: 0x141f36, metalness: 0.8, roughness: 0.2 });
+    function createNetworkNode(x, y, z, deviceType = 'switch', name = 'Switch', ip = '192.168.1.2', location = 'Dãy Ngang', downlink = '', targetGroup = scene) {
+      const group = new THREE.Group();
+      group.position.set(x, y, z);
+
+      let w = 2.4, h = 0.6, d = 1.4;
+      let baseColor = 0x141f36;
+      let accentColor = 0x00ff88;
+      let typeLabel = 'MANAGED_DISTRIBUTION_SWITCH';
+
+      if (deviceType === 'router') {
+        w = 2.6; h = 0.8; d = 1.6;
+        baseColor = 0x0f172a;
+        accentColor = 0x00f0ff;
+        typeLabel = 'ENTERPRISE_ROUTER';
+      } else if (deviceType === 'hub') {
+        w = 2.0; h = 0.5; d = 1.2;
+        baseColor = 0x13233f;
+        accentColor = 0x38bdf8;
+        typeLabel = 'DISTRIBUTION_HUB';
+      } else if (deviceType === 'converter') {
+        w = 1.6; h = 0.45; d = 1.1;
+        baseColor = 0x241808;
+        accentColor = 0xffaa00;
+        typeLabel = 'OPTICAL_MEDIA_CONVERTER';
+      }
+
+      const boxGeom = new THREE.BoxGeometry(w, h, d);
+      const boxMat = new THREE.MeshStandardMaterial({
+        color: baseColor,
+        metalness: 0.85,
+        roughness: 0.25
+      });
       const box = new THREE.Mesh(boxGeom, boxMat);
-      box.position.set(x, y + 0.4, z);
+      group.add(box);
 
-      const ledBarGeom = new THREE.PlaneGeometry(1.9, 0.2);
-      const ledBarMat = new THREE.MeshBasicMaterial({ color: 0x00ff88 });
+      // Mặt trước có dải LED trạng thái
+      const ledBarGeom = new THREE.PlaneGeometry(w * 0.82, h * 0.28);
+      const ledBarMat = new THREE.MeshBasicMaterial({ color: accentColor });
       const ledBar = new THREE.Mesh(ledBarGeom, ledBarMat);
-      ledBar.position.set(0, 0, 0.71);
-      box.add(ledBar);
+      ledBar.position.set(0, 0, d / 2 + 0.02);
+      group.add(ledBar);
 
-      targetGroup.add(box);
+      // Đèn LED chớp tắt
+      const dotGeom = new THREE.BoxGeometry(0.12, 0.1, 0.04);
+      for (let i = 0; i < 4; i++) {
+        const dotMat = new THREE.MeshBasicMaterial({ color: (i % 2 === 0) ? accentColor : 0x00ff88 });
+        const dot = new THREE.Mesh(dotGeom, dotMat);
+        dot.position.set(-w * 0.35 + i * 0.24, -h * 0.2, d / 2 + 0.03);
+        group.add(dot);
+      }
+
+      if (deviceType === 'router') {
+        // Anten Cyber kép phía sau
+        const antGeom = new THREE.CylinderGeometry(0.04, 0.06, 1.2, 8);
+        const antMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff });
+        const ant1 = new THREE.Mesh(antGeom, antMat);
+        ant1.position.set(-w * 0.35, h * 0.5 + 0.6, -d * 0.3);
+        ant1.rotation.z = -0.15;
+        group.add(ant1);
+
+        const ant2 = new THREE.Mesh(antGeom, antMat);
+        ant2.position.set(w * 0.35, h * 0.5 + 0.6, -d * 0.3);
+        ant2.rotation.z = 0.15;
+        group.add(ant2);
+      } else if (deviceType === 'converter') {
+        // Cổng quang TX/RX phát sáng màu vàng cam
+        const portGeom = new THREE.CylinderGeometry(0.12, 0.12, 0.2, 8);
+        const portMat = new THREE.MeshBasicMaterial({ color: 0xffaa00 });
+        const p1 = new THREE.Mesh(portGeom, portMat);
+        p1.rotation.x = Math.PI / 2;
+        p1.position.set(-0.25, 0, d / 2 + 0.08);
+        group.add(p1);
+        const p2 = p1.clone();
+        p2.position.set(0.25, 0, d / 2 + 0.08);
+        group.add(p2);
+      }
+
+      targetGroup.add(group);
 
       registerInteractiveNode(box, {
         name,
-        type: 'MANAGED_DISTRIBUTION_SWITCH',
+        type: typeLabel,
         ip,
         location,
-        bandwidth: '1 Gbps / Port',
+        bandwidth: deviceType === 'converter' ? '10 Gbps SFP+ Fiber' : deviceType === 'router' ? '10 Gbps NAT/Routing' : '1 Gbps Full Duplex',
         status: 'ONLINE',
-        uplink: 'Router Trung Tâm / Hub Tổng',
-        downlink,
+        uplink: deviceType === 'converter' ? 'VNPT MetroNet Tier-1' : 'Router Thượng Tầng / Hub Tổng',
+        downlink: downlink || 'Các trạm node phòng học',
         category: 'backbone'
       });
 
-      return box;
+      return group;
+    }
+
+    function createSwitchBox(x, y, z, name = 'Switch', ip = '192.168.1.2', location = 'Dãy Ngang', downlink = '', targetGroup = scene, deviceType = 'switch') {
+      return createNetworkNode(x, y, z, deviceType, name, ip, location, downlink, targetGroup);
     }
 
     const pcDeskGeom = new THREE.BoxGeometry(1.0, 0.6, 0.7);
@@ -1556,9 +1628,12 @@
       const tubeMat = new THREE.MeshBasicMaterial({
         color: colorHex,
         transparent: true,
-        opacity: 0.82
+        opacity: 0.9,
+        depthWrite: false
       });
       const tube = new THREE.Mesh(tubeGeom, tubeMat);
+      tube.renderOrder = 8;
+      tube.frustumCulled = false;
       targetGroup.add(tube);
 
       cableCurves.push({ curve, category });
@@ -1568,9 +1643,12 @@
         const packetGeom = new THREE.SphereGeometry(radius * 2.2, 8, 8);
         const packetMat = new THREE.MeshBasicMaterial({
           color: colorHex,
-          blending: THREE.AdditiveBlending
+          blending: THREE.AdditiveBlending,
+          depthWrite: false
         });
         const packet = new THREE.Mesh(packetGeom, packetMat);
+        packet.renderOrder = 12;
+        packet.frustumCulled = false;
         targetGroup.add(packet);
 
         dataPackets.push({
@@ -1625,7 +1703,8 @@
     // TH Lí
     createRoomBox(11, 18, 19.5, 0, 0, 4.0, floorGroups[1]);
     createComputerWorkstation(19.5, 0, 0, 'MT-TH Lí', '192.168.10.60', 'Phòng TH Lí', floorGroups[1]);
-    const lblLy = createLabelSprite('PHÒNG TH LÍ', '1 MT GIẢNG VIÊN', '#00ff88', 6, 1.8);
+    createCameraNode(23, 6, 3.5, 'CAM-TH-LY', 'Phòng TH Lí', floorGroups[1]);
+    const lblLy = createLabelSprite('PHÒNG TH LÍ', '1 MT + 1 CAMERA', '#00ff88', 6, 1.8);
     lblLy.position.set(19.5, 5.0, 0);
     floorGroups[1].add(lblLy);
 
@@ -1638,16 +1717,17 @@
     // --------------------------------------------------------------------------
     // TẦNG 2 (FIRST FLOOR - Y = 10):
     // PHÍA BÊN TRÁI CẦU THANG: 2 PHÒNG TIN (PM1 & PM2) NẰM TRỰC TIẾP TRÊN PHÒNG HÓA!
-    // PHÍA BÊN PHẢI CẦU THANG: THƯ VIỆN (MT1)
+    // PHÍA BÊN PHẢI CẦU THANG: THƯ VIỆN (MT1 + CAM)
     // --------------------------------------------------------------------------
-    // Cụm Router & Hub sát mép trái
-    const hubTongB = createSwitchBox(-35, 0, 10, 'Hub Tổng Dãy Ngang', '192.168.1.2', 'Dãy Ngang T2', 'Phân Phối Toàn Bộ', floorGroups[2]);
+    // Cụm Router & Hub sát mép trái Dãy Ngang T2
+    const hubTongB = createNetworkNode(-38, 10.6, 0, 'hub', 'Hub Tổng Dãy Ngang', '192.168.1.2', 'Dãy Ngang T2', 'Phân Phối Toàn Trường', floorGroups[2]);
+    const routerBalance = createNetworkNode(-38, 10.6, -3, 'router', 'Router Cân Bằng Tải', '192.168.1.254', 'Dãy Ngang T2', 'Gateway & Load Balancing', floorGroups[2]);
 
     // PHÒNG MÁY 1 (NẰM TRÊN PHÒNG HÓA - PHÍA TRÁI)
     createRoomBox(18, 18, -25, 0, 10, 4.0, floorGroups[2]);
-    const routerPM1 = createSwitchBox(-34.5, 0, 10, 'Router Phòng Máy 1', '192.168.20.1', 'Phòng Máy 1', 'Cấp phát IP PM1', floorGroups[2]);
-    const switchPM1 = createSwitchBox(-33, 0, 10, 'Switch Phòng Máy 1', '192.168.20.2', 'Phòng Máy 1', '32 MT, TV, Máy Chiếu', floorGroups[2]);
-    createCameraNode(-33, 6, 13.5, 'CAM-PM1', 'Phòng Máy 1', floorGroups[2]);
+    const routerPM1 = createNetworkNode(-34, 10.6, 0, 'router', 'Router Phòng Máy 1', '192.168.20.1', 'Phòng Máy 1', 'Cấp phát IP PM1', floorGroups[2]);
+    const switchPM1 = createNetworkNode(-31, 10.6, 0, 'switch', 'Switch Phòng Máy 1', '192.168.20.2', 'Phòng Máy 1', '32 MT, TV, Máy Chiếu', floorGroups[2]);
+    createCameraNode(-18, 6, 13.5, 'CAM-PM1', 'Phòng Máy 1', floorGroups[2]);
 
     const tv1Geom = new THREE.BoxGeometry(3.0, 1.8, 0.15);
     const tv1Mat = new THREE.MeshBasicMaterial({ color: 0x0077ff });
@@ -1670,20 +1750,20 @@
 
     // Cáp kết nối từ Switch PM1 tới Smart TV và Máy Chiếu
     createCable([
-      new THREE.Vector3(-33, 10.6, 0),
+      new THREE.Vector3(-31, 10.6, 0),
       new THREE.Vector3(-33.5, 11.5, 0),
       new THREE.Vector3(-33.5, 12.5, 0)
     ], 0x00f0ff, 0.035, 'labs', 1.2, 1, 10, floorGroups[2]);
 
     createCable([
-      new THREE.Vector3(-33, 10.6, 0),
-      new THREE.Vector3(-33, 13.5, 0),
-      new THREE.Vector3(-25.6, 13.5, 0)
+      new THREE.Vector3(-31, 10.6, 0),
+      new THREE.Vector3(-31, 13.5, 0),
+      new THREE.Vector3(-25, 13.5, 0)
     ], 0x00f0ff, 0.035, 'labs', 1.2, 1, 10, floorGroups[2]);
 
     // Trục máng cáp phân phối chính (Spine) chạy dọc hành lang phòng máy 1
     createCable([
-      new THREE.Vector3(-33, 10.4, 0),
+      new THREE.Vector3(-31, 10.4, 0),
       new THREE.Vector3(-32.8, 10.12, 0),
       new THREE.Vector3(-32.8, 10.12, -6)
     ], 0x00d4ff, 0.065, 'labs', 1.5, 2, 14, floorGroups[2]);
@@ -1724,9 +1804,9 @@
 
     // PHÒNG MÁY 2 (NẰM TRÊN PHÒNG HÓA - PHÍA PHẢI TIẾP GIÁP CẦU THANG)
     createRoomBox(18, 18, -6, 0, 10, 4.0, floorGroups[2]);
-    const routerPM2 = createSwitchBox(-15.5, 0, 10, 'Router Phòng Máy 2', '192.168.30.1', 'Phòng Máy 2', 'Cấp phát IP PM2', floorGroups[2]);
-    const switchPM2 = createSwitchBox(-14, 0, 10, 'Switch Phòng Máy 2', '192.168.30.2', 'Phòng Máy 2', '32 MT, TV, Máy Chiếu', floorGroups[2]);
-    createCameraNode(-14, 6, 13.5, 'CAM-PM2', 'Phòng Máy 2', floorGroups[2]);
+    const routerPM2 = createNetworkNode(-16, 10.6, 0, 'router', 'Router Phòng Máy 2', '192.168.30.1', 'Phòng Máy 2', 'Cấp phát IP PM2', floorGroups[2]);
+    const switchPM2 = createNetworkNode(-13, 10.6, 0, 'switch', 'Switch Phòng Máy 2', '192.168.30.2', 'Phòng Máy 2', '32 MT, TV, Máy Chiếu', floorGroups[2]);
+    createCameraNode(1, 6, 13.5, 'CAM-PM2', 'Phòng Máy 2', floorGroups[2]);
 
     const tv2 = tv1.clone();
     tv2.position.set(-14.5, 12.5, 0);
@@ -1746,20 +1826,20 @@
 
     // Cáp kết nối từ Switch PM2 tới Smart TV và Máy Chiếu
     createCable([
-      new THREE.Vector3(-14, 10.6, 0),
+      new THREE.Vector3(-13, 10.6, 0),
       new THREE.Vector3(-14.5, 11.5, 0),
       new THREE.Vector3(-14.5, 12.5, 0)
     ], 0x38bdf8, 0.035, 'labs', 1.2, 1, 10, floorGroups[2]);
 
     createCable([
-      new THREE.Vector3(-14, 10.6, 0),
-      new THREE.Vector3(-14, 13.5, 0),
-      new THREE.Vector3(-6.6, 13.5, 0)
+      new THREE.Vector3(-13, 10.6, 0),
+      new THREE.Vector3(-13, 13.5, 0),
+      new THREE.Vector3(-6, 13.5, 0)
     ], 0x38bdf8, 0.035, 'labs', 1.2, 1, 10, floorGroups[2]);
 
     // Trục máng cáp phân phối chính (Spine) chạy dọc hành lang phòng máy 2
     createCable([
-      new THREE.Vector3(-14, 10.4, 0),
+      new THREE.Vector3(-13, 10.4, 0),
       new THREE.Vector3(-13.8, 10.12, 0),
       new THREE.Vector3(-13.8, 10.12, -6)
     ], 0x38bdf8, 0.065, 'labs', 1.5, 2, 14, floorGroups[2]);
@@ -1800,8 +1880,10 @@
 
     // THƯ VIỆN (TẦNG 2 - BÊN PHẢI CẦU THANG)
     createRoomBox(18, 18, 23, 0, 10, 4.0, floorGroups[2]);
+    const switchTV = createNetworkNode(16, 10.6, 0, 'switch', 'Switch Thư Viện', '192.168.10.51', 'Thư Viện', 'MT & Cam Thư Viện', floorGroups[2]);
     createComputerWorkstation(23, 0, 10, 'MT-Thư Viện', '192.168.10.50', 'Thư Viện', floorGroups[2]);
-    const lblTV = createLabelSprite('THƯ VIỆN', '1 MT THỦ THƯ', '#00ff88', 6, 1.8);
+    createCameraNode(27, 6, 13.5, 'CAM-TV', 'Thư Viện', floorGroups[2]);
+    const lblTV = createLabelSprite('THƯ VIỆN', '1 MT + 1 CAMERA', '#00ff88', 6, 1.8);
     lblTV.position.set(23, 15.5, 0);
     floorGroups[2].add(lblTV);
 
@@ -1810,7 +1892,8 @@
     // PHÍA BÊN TRÁI CẦU THANG: 3 PHÒNG CHỨC NĂNG PHỤ
     // PHÍA BÊN PHẢI CẦU THANG: PHÒNG THỰC HÀNH TIẾNG ANH (RỘNG)
     // --------------------------------------------------------------------------
-    const hubNgangT3 = createSwitchBox(-35, 0, 20, 'Hub Dãy Ngang T3', '192.168.60.1', 'Dãy Ngang T3', 'Phân Phối T3', floorGroups[3]);
+    const hubNgangT3 = createNetworkNode(-38, 20.6, 0, 'hub', 'Hub Dãy Ngang T3', '192.168.60.1', 'Dãy Ngang T3', 'Phân Phối T3', floorGroups[3]);
+    const switchNgangT3 = createNetworkNode(9, 20.6, -7, 'switch', 'Switch Phụ Dãy Ngang T3', '192.168.60.2', 'Dãy Ngang T3', 'Cầu thang T3', floorGroups[3]);
 
     createRoomBox(14, 18, -32, 0, 20, 4.0, floorGroups[3]);
     createRoomBox(14, 18, -18, 0, 20, 4.0, floorGroups[3]);
@@ -1820,6 +1903,8 @@
     floorGroups[3].add(lblPhu);
 
     createRoomBox(18, 18, 23, 0, 20, 4.0, floorGroups[3]);
+    const switchTA = createNetworkNode(16, 20.6, 0, 'switch', 'Switch TH Tiếng Anh', '192.168.60.3', 'Phòng TH Tiếng Anh', '6 MT + Camera', floorGroups[3]);
+    createCameraNode(27, 6, 23.5, 'CAM-TA', 'Phòng TH Tiếng Anh', floorGroups[3]);
     const lblTA = createLabelSprite('PHÒNG TH TIẾNG ANH', 'LAB NGOẠI NGỮ CHUYÊN DỤNG', '#a855f7', 8, 2.2);
     lblTA.position.set(23, 25.5, 0);
     floorGroups[3].add(lblTA);
@@ -1849,8 +1934,8 @@
 
     // DÃY B TẦNG 1 - Phòng Hội Đồng
     createRoomBox(wingB_W, 16, wingB_X, 12, 0, 4.0, floorGroups[1]);
-    const routerHD = createSwitchBox(wingB_X, 0, 12, 'Router Hội Đồng', '192.168.1.1', 'Phòng Hội Đồng (T1)', 'Router Dãy B', floorGroups[1]);
-    const lblHD = createLabelSprite('PHÒNG HỘI ĐỒNG', '1 ROUTER TỔNG', '#00ff88', 6, 1.8);
+    const routerHD = createNetworkNode(-45, 1.0, 12, 'router', 'Router Phòng Hội Đồng', '192.168.1.1', 'Phòng Hội Đồng (T1)', 'Router Chính Dãy B', floorGroups[1]);
+    const lblHD = createLabelSprite('PHÒNG HỘI ĐỒNG', '1 ROUTER CHÍNH', '#00ff88', 6, 1.8);
     lblHD.position.set(wingB_X, 5.0, 12);
     floorGroups[1].add(lblHD);
 
@@ -1858,14 +1943,14 @@
       if (bay.isRoom) {
         createRoomBox(wingB_W, 7.5, wingB_X, bay.z, 10, 4.0, floorGroups[2]);
         createComputerWorkstation(wingB_X - 4, bay.z, 10, `MT-${bay.name}`, `192.168.19.${bay.id}`, bay.name, floorGroups[2]);
-        createCameraNode(wingB_X + 7, bay.z - 2, 13.5, `CAM-P${bay.id}`, bay.name, floorGroups[2]);
+        createCameraNode(-44, bay.z - 2, 13.5, `CAM-P${bay.id}`, bay.name, floorGroups[2]);
 
         const lbl = createLabelSprite(bay.name, '1 MT + 1 CAMERA', '#00f0ff', 6, 1.8);
         lbl.position.set(wingB_X, 15.0, bay.z);
         floorGroups[2].add(lbl);
       } else if (bay.isStair) {
         createStaircaseShaft(wingB_W, 7.5, wingB_X, bay.z, 0, 10, floorGroups[1], '+X');
-        createSwitchBox(wingB_X + 4, 0, bay.z, `Router Hành Lang ${bay.name}`, `192.168.19.${bay.z}`, 'Hành lang B', 'Router', floorGroups[2]);
+        createNetworkNode(-45, 10.6, bay.z, 'router', `Router Hành Lang ${bay.name}`, `192.168.19.${bay.z}`, 'Hành lang B', 'Router Tầng', floorGroups[2]);
         const lbl = createLabelSprite('CẦU THANG B', 'HƯỚNG SÂN TRƯỜNG', '#00f0ff', 6, 1.8);
         lbl.position.set(wingB_X, 15.0, bay.z);
         floorGroups[2].add(lbl);
@@ -1884,7 +1969,9 @@
     createRoomBox(wingA_W, 68, wingA_X, 32, 10, 0.4, floorGroups[2]);
 
     // DÃY A TẦNG 1 (P6 -> P1)
-    const hubA1 = createSwitchBox(wingA_X - 4, 0, 44, 'Hub Dãy A T1', '192.168.3.1', 'Dãy A T1', 'Hub Phân Phối', floorGroups[1]);
+    const hubA1 = createNetworkNode(36, 1.2, 42, 'hub', 'Hub Dãy A T1 (Chính)', '192.168.3.1', 'Dãy A T1 (Cầu Thang 2)', 'Hub Phân Phối T1', floorGroups[1]);
+    const switchA1_Bac = createNetworkNode(36, 1.2, 20, 'switch', 'Switch Tầng Dãy A1 (Phía Bắc)', '192.168.40.1', 'Dãy A T1 (Cầu Thang 1)', 'Cụm P4-P6', floorGroups[1]);
+
     const wingAT1_Bays = [
       { name: 'Phòng 6', z: 4, isRoom: true, id: 6 },
       { name: 'Phòng 5', z: 12, isRoom: true, id: 5 },
@@ -1900,7 +1987,7 @@
       if (bay.isRoom) {
         createRoomBox(wingA_W, 7.5, wingA_X, bay.z, 0, 4.0, floorGroups[1]);
         createComputerWorkstation(wingA_X + 4, bay.z, 0, `MT-${bay.name}`, `192.168.40.${10 + bay.id}`, bay.name, floorGroups[1]);
-        createCameraNode(wingA_X - 7, bay.z - 2, 3.5, `CAM-P${bay.id}`, bay.name, floorGroups[1]);
+        createCameraNode(37, bay.z - 2, 3.5, `CAM-P${bay.id}`, bay.name, floorGroups[1]);
 
         const lbl = createLabelSprite(bay.name, '1 MT + 1 CAMERA', '#00f0ff', 6, 1.8);
         lbl.position.set(wingA_X, 5.0, bay.z);
@@ -1914,9 +2001,10 @@
     });
 
     // DÃY A TẦNG 2 (P7 -> P12)
-    const mediaConvA = createSwitchBox(wingA_X - 6, 0, 44, 'Bộ Chuyển Đổi Quang', 'N/A', 'Dãy A T2', 'Media Converter', floorGroups[2]);
-    const routerA = createSwitchBox(wingA_X - 4, 0, 44, 'Router Dãy A', '192.168.2.1', 'Dãy A T2', 'Router Chính', floorGroups[2]);
-    const hubSwitchA = createSwitchBox(wingA_X - 2, 0, 44, 'Hub Switch Dãy A', '192.168.2.2', 'Dãy A T2', 'Hub Phân Phối', floorGroups[2]);
+    const mediaConvA = createNetworkNode(36, 10.6, 46, 'converter', 'Bộ Chuyển Đổi Quang Dãy A', '10G Media Converter', 'Dãy A T2', 'Cáp quang VNPT', floorGroups[2]);
+    const routerA = createNetworkNode(36, 10.6, 44, 'router', 'Router Dãy A Tầng 2', '192.168.2.1', 'Dãy A T2', 'Router Chính Dãy A', floorGroups[2]);
+    const hubSwitchA = createNetworkNode(36, 10.6, 42, 'switch', 'Hub Switch Dãy A T2', '192.168.2.2', 'Dãy A T2', 'Hub Phân Phối Dãy A', floorGroups[2]);
+    const switchA2_Bac = createNetworkNode(36, 10.6, 20, 'switch', 'Switch Tầng Dãy A2 (Phía Bắc)', '192.168.50.1', 'Dãy A T2 (Cầu Thang 1)', 'Cụm P7-P9', floorGroups[2]);
 
     const wingAT2_Bays = [
       { name: 'Phòng 7', z: 4, isRoom: true, id: 7 },
@@ -1933,7 +2021,7 @@
       if (bay.isRoom) {
         createRoomBox(wingA_W, 7.5, wingA_X, bay.z, 10, 4.0, floorGroups[2]);
         createComputerWorkstation(wingA_X + 4, bay.z, 10, `MT-${bay.name}`, `192.168.50.${10 + bay.id}`, bay.name, floorGroups[2]);
-        createCameraNode(wingA_X - 7, bay.z - 2, 13.5, `CAM-P${bay.id}`, bay.name, floorGroups[2]);
+        createCameraNode(37, bay.z - 2, 13.5, `CAM-P${bay.id}`, bay.name, floorGroups[2]);
 
         const lbl = createLabelSprite(bay.name, '1 MT + 1 CAMERA', '#00f0ff', 6, 1.8);
         lbl.position.set(wingA_X, 15.0, bay.z);
@@ -1951,134 +2039,213 @@
 
     // 1. Cáp quang ngầm VNPT -> Router Hội Đồng (Dãy B T1)
     createCable([
-      new THREE.Vector3(0, 2.5, 75),
-      new THREE.Vector3(wingB_X, 2.5, 75),
-      new THREE.Vector3(wingB_X, 2.5, 12)
+      new THREE.Vector3(0, 0.8, 75),
+      new THREE.Vector3(-45, 0.8, 75),
+      new THREE.Vector3(-45, 1.0, 12)
     ], 0xffaa00, 0.22, 'backbone', 1.8, 6);
 
     // 2. Cáp quang ngầm VNPT -> Media Converter (Dãy A T2)
     createCable([
-      new THREE.Vector3(0, 2.5, 75),
-      new THREE.Vector3(wingA_X - 6, 2.5, 75),
-      new THREE.Vector3(wingA_X - 6, 11.5, 75),
-      new THREE.Vector3(wingA_X - 6, 11.5, 44)
+      new THREE.Vector3(0, 0.8, 75),
+      new THREE.Vector3(36, 0.8, 75),
+      new THREE.Vector3(36, 10.6, 75),
+      new THREE.Vector3(36, 10.6, 46)
     ], 0xffaa00, 0.22, 'backbone', 1.8, 6);
 
     // 3. Router Hội Đồng (T1) -> Hub Tổng Dãy Ngang (T2)
     createCable([
-      new THREE.Vector3(wingB_X, 2.5, 12),
-      new THREE.Vector3(wingB_X, 11.5, 12),
-      new THREE.Vector3(wingB_X, 11.5, 10),
-      new THREE.Vector3(-35, 11.5, 10)
+      new THREE.Vector3(-45, 1.0, 12),
+      new THREE.Vector3(-45, 10.6, 12),
+      new THREE.Vector3(-45, 10.6, 0),
+      new THREE.Vector3(-38, 10.6, 0)
     ], 0x0077ff, 0.18, 'backbone', 2.0, 3);
 
-    // 4. Hub Tổng rẽ nhánh Dãy B T2 dọc hành lang qua các Router cầu thang
+    // 4. Hub Tổng -> Router Cân Bằng Tải Góc
     createCable([
-      new THREE.Vector3(-35, 11.5, 10),
-      new THREE.Vector3(wingB_X + 6, 11.5, 10),
-      new THREE.Vector3(wingB_X + 6, 11.5, 20) // Đến Cầu Thang B1
-    ], 0x0077ff, 0.12, 'distribution', 1.5, 2);
+      new THREE.Vector3(-38, 10.6, 0),
+      new THREE.Vector3(-38, 10.6, -3)
+    ], 0x00f0ff, 0.12, 'backbone', 1.5, 2);
 
+    // 5. Tuyến trục Dãy B T2 chạy dọc hành lang qua Router B1 (Z=20) và Router B2 (Z=44)
     createCable([
-      new THREE.Vector3(wingB_X + 6, 11.5, 20),
-      new THREE.Vector3(wingB_X + 6, 11.5, 44) // Đến Cầu Thang B2
-    ], 0x0077ff, 0.12, 'distribution', 1.5, 2);
+      new THREE.Vector3(-38, 10.6, 0),
+      new THREE.Vector3(-45, 10.6, 0),
+      new THREE.Vector3(-45, 10.6, 20),
+      new THREE.Vector3(-45, 10.6, 44),
+      new THREE.Vector3(-45, 10.6, 62)
+    ], 0x0077ff, 0.14, 'distribution', 1.6, 5, 48, floorGroups[2]);
 
+    // Nhánh rẽ tới từng Máy Tính & Camera tại các phòng Dãy B (Phòng 19 - 24)
     wingB_Bays.forEach(bay => {
       if (bay.isRoom) {
+        // Cáp tới Camera
         createCable([
-          new THREE.Vector3(wingB_X + 6, 11.5, bay.z),
-          new THREE.Vector3(wingB_X, 11.0, bay.z)
-        ], 0x00f0ff, 0.09, 'distribution', 1.2, 1);
+          new THREE.Vector3(-45, 10.6, bay.z),
+          new THREE.Vector3(-44, 13.5, bay.z - 2)
+        ], 0xff3366, 0.04, 'cctv', 1.2, 1, 12, floorGroups[2]);
+
+        // Cáp tới Máy tính
+        createCable([
+          new THREE.Vector3(-45, 10.6, bay.z),
+          new THREE.Vector3(-55, 10.6, bay.z)
+        ], 0x00f0ff, 0.05, 'endpoint', 1.2, 1, 16, floorGroups[2]);
       }
     });
 
-    // 5. Hub Tổng chạy ngang cấp Phòng Máy 1, 2 và Thư Viện
+    // 6. Hub Tổng Dãy Ngang cấp Phòng Máy 1
     createCable([
-      new THREE.Vector3(-35, 11.5, 10),
-      new THREE.Vector3(-34.5, 11.5, 10) // Tới Router PM1
-    ], 0x00f0ff, 0.16, 'labs', 1.8, 2);
+      new THREE.Vector3(-38, 10.6, 0),
+      new THREE.Vector3(-34, 10.6, 0) // Tới Router PM1
+    ], 0x00f0ff, 0.16, 'labs', 1.8, 2, 24, floorGroups[2]);
 
     createCable([
-      new THREE.Vector3(-34.5, 11.5, 10),
-      new THREE.Vector3(-33, 11.5, 10) // Tới Switch PM1
-    ], 0x00f0ff, 0.16, 'labs', 1.8, 2);
+      new THREE.Vector3(-34, 10.6, 0),
+      new THREE.Vector3(-31, 10.6, 0) // Router PM1 tới Switch PM1
+    ], 0x00f0ff, 0.16, 'labs', 1.8, 2, 24, floorGroups[2]);
+
+    // Cáp từ Switch PM1 tới Camera PM1
+    createCable([
+      new THREE.Vector3(-31, 10.6, 0),
+      new THREE.Vector3(-20, 10.6, 6),
+      new THREE.Vector3(-18, 13.5, 6)
+    ], 0xff3366, 0.04, 'cctv', 1.2, 1, 16, floorGroups[2]);
+
+    // 7. Cáp trục từ Switch PM1 sang Router PM2 & Switch PM2
+    createCable([
+      new THREE.Vector3(-31, 10.6, 0),
+      new THREE.Vector3(-16, 10.6, 0) // Tới Router PM2
+    ], 0x00f0ff, 0.16, 'labs', 1.8, 4, 32, floorGroups[2]);
 
     createCable([
-      new THREE.Vector3(-34.5, 11.5, 10),
-      new THREE.Vector3(-15.5, 11.5, 10) // Tới Router PM2
-    ], 0x00f0ff, 0.16, 'labs', 1.8, 4);
+      new THREE.Vector3(-16, 10.6, 0),
+      new THREE.Vector3(-13, 10.6, 0) // Router PM2 tới Switch PM2
+    ], 0x00f0ff, 0.16, 'labs', 1.8, 2, 24, floorGroups[2]);
+
+    // Cáp từ Switch PM2 tới Camera PM2
+    createCable([
+      new THREE.Vector3(-13, 10.6, 0),
+      new THREE.Vector3(-1, 10.6, 6),
+      new THREE.Vector3(1, 13.5, 6)
+    ], 0xff3366, 0.04, 'cctv', 1.2, 1, 16, floorGroups[2]);
+
+    // 8. Cáp từ Switch PM2 sang Switch Thư Viện
+    createCable([
+      new THREE.Vector3(-13, 10.6, 0),
+      new THREE.Vector3(stairX, 10.6, 0),
+      new THREE.Vector3(16, 10.6, 0)
+    ], 0x00ff88, 0.14, 'distribution', 1.2, 3, 32, floorGroups[2]);
+
+    // Cáp từ Switch Thư Viện tới MT Thư Viện & Camera Thư Viện
+    createCable([
+      new THREE.Vector3(16, 10.6, 0),
+      new THREE.Vector3(23, 10.6, 0)
+    ], 0x00ff88, 0.05, 'endpoint', 1.0, 1, 16, floorGroups[2]);
 
     createCable([
-      new THREE.Vector3(-15.5, 11.5, 10),
-      new THREE.Vector3(-14, 11.5, 10) // Tới Switch PM2
-    ], 0x00f0ff, 0.16, 'labs', 1.8, 2);
+      new THREE.Vector3(16, 10.6, 0),
+      new THREE.Vector3(25, 10.6, 6),
+      new THREE.Vector3(27, 13.5, 6)
+    ], 0xff3366, 0.04, 'cctv', 1.0, 1, 16, floorGroups[2]);
 
-    // Cáp sang Thư Viện
+    // 9. Cáp Riser theo trục cầu thang xuống Tầng 1: TH Lí
     createCable([
-      new THREE.Vector3(-15.5, 11.5, 10),
-      new THREE.Vector3(stairX, 12.5, 0),
-      new THREE.Vector3(23, 11.5, 0)
-    ], 0x00ff88, 0.12, 'distribution', 1.0, 2);
+      new THREE.Vector3(stairX, 10.6, 0),
+      new THREE.Vector3(stairX, 1.0, 0),
+      new THREE.Vector3(19.5, 1.0, 0)
+    ], 0x00ff88, 0.12, 'distribution', 1.2, 2, 24, floorGroups[1]);
 
-    // Cáp Riser theo trục cầu thang xuống Tầng 1: TH Lí
+    // Cáp tới Camera TH Lí
     createCable([
-      new THREE.Vector3(stairX, 11.5, 0),
-      new THREE.Vector3(stairX, 2.0, 0),
-      new THREE.Vector3(19.5, 2.0, 0)
-    ], 0x00ff88, 0.12, 'distribution', 1.0, 2);
+      new THREE.Vector3(19.5, 1.0, 0),
+      new THREE.Vector3(23, 3.5, 6)
+    ], 0xff3366, 0.04, 'cctv', 1.0, 1, 12, floorGroups[1]);
 
-    // Cáp lên Hub Dãy Ngang T3
+    // 10. Cáp Riser từ Hub Tổng T2 lên Hub Dãy Ngang T3
     createCable([
-      new THREE.Vector3(-35, 11.5, 10),
-      new THREE.Vector3(-35, 21.5, 10),
-      new THREE.Vector3(-35, 21.5, 20)
-    ], 0x0077ff, 0.16, 'backbone', 1.8, 3);
+      new THREE.Vector3(-38, 10.6, 0),
+      new THREE.Vector3(-38, 20.6, 0)
+    ], 0xa855f7, 0.16, 'backbone', 1.8, 3, 24, floorGroups[3]);
 
-    // Hub Dãy Ngang T3 phân phối sang TH Tiếng Anh
+    // Tuyến trục hành lang Dãy Ngang T3
     createCable([
-      new THREE.Vector3(-35, 21.5, 20),
-      new THREE.Vector3(stairX, 21.5, 20),
-      new THREE.Vector3(23, 21.5, 0)
-    ], 0xa855f7, 0.14, 'distribution', 1.2, 3);
+      new THREE.Vector3(-38, 20.6, 0),
+      new THREE.Vector3(-38, 20.6, -7),
+      new THREE.Vector3(9, 20.6, -7),
+      new THREE.Vector3(16, 20.6, 0)
+    ], 0xa855f7, 0.14, 'distribution', 1.4, 4, 36, floorGroups[3]);
 
-    // 6. Tuyến cáp Dãy A
+    // Cáp từ Switch Tiếng Anh tới Camera Tiếng Anh
+    createCable([
+      new THREE.Vector3(16, 20.6, 0),
+      new THREE.Vector3(25, 20.6, 6),
+      new THREE.Vector3(27, 23.5, 6)
+    ], 0xff3366, 0.04, 'cctv', 1.2, 1, 16, floorGroups[3]);
+
+    // 11. Tuyến cáp cụm Dãy A Tầng 2
     // Media Conv -> Router A -> Hub Switch A
     createCable([
-      new THREE.Vector3(wingA_X - 6, 11.5, 44),
-      new THREE.Vector3(wingA_X - 4, 11.5, 44)
-    ], 0x0077ff, 0.1, 'backbone', 1.0, 1);
-    createCable([
-      new THREE.Vector3(wingA_X - 4, 11.5, 44),
-      new THREE.Vector3(wingA_X - 2, 11.5, 44)
-    ], 0x0077ff, 0.1, 'backbone', 1.0, 1);
+      new THREE.Vector3(36, 10.6, 46),
+      new THREE.Vector3(36, 10.6, 44)
+    ], 0x0077ff, 0.12, 'backbone', 1.0, 1, 8, floorGroups[2]);
 
-    // Hub Switch A (T2) -> Hub A1 (T1)
     createCable([
-      new THREE.Vector3(wingA_X - 2, 11.5, 44),
-      new THREE.Vector3(wingA_X - 2, 1.5, 44),
-      new THREE.Vector3(wingA_X - 4, 1.5, 44)
-    ], 0x0077ff, 0.16, 'backbone', 1.5, 2);
+      new THREE.Vector3(36, 10.6, 44),
+      new THREE.Vector3(36, 10.6, 42)
+    ], 0x0077ff, 0.12, 'backbone', 1.0, 1, 8, floorGroups[2]);
 
-    // Phân phối Dãy A Tầng 2
+    // Tuyến trục hành lang Dãy A Tầng 2
+    createCable([
+      new THREE.Vector3(36, 10.6, 0),
+      new THREE.Vector3(36, 10.6, 20),
+      new THREE.Vector3(36, 10.6, 42),
+      new THREE.Vector3(36, 10.6, 62)
+    ], 0x0077ff, 0.14, 'distribution', 1.6, 5, 48, floorGroups[2]);
+
+    // Nhánh rẽ tới từng Máy Tính & Camera tại các phòng Dãy A T2 (Phòng 7 - 12)
     wingAT2_Bays.forEach(bay => {
       if (bay.isRoom) {
+        // Cáp tới Camera
         createCable([
-          new THREE.Vector3(wingA_X - 2, 11.5, 44),
-          new THREE.Vector3(wingA_X - 2, 11.5, bay.z),
-          new THREE.Vector3(wingA_X, 11.0, bay.z)
-        ], 0x00f0ff, 0.08, 'distribution', 1.1, 2);
+          new THREE.Vector3(36, 10.6, bay.z),
+          new THREE.Vector3(37, 13.5, bay.z - 2)
+        ], 0xff3366, 0.04, 'cctv', 1.2, 1, 12, floorGroups[2]);
+
+        // Cáp tới Máy tính
+        createCable([
+          new THREE.Vector3(36, 10.6, bay.z),
+          new THREE.Vector3(48, 10.6, bay.z)
+        ], 0x00f0ff, 0.05, 'endpoint', 1.2, 1, 16, floorGroups[2]);
       }
     });
 
-    // Phân phối Dãy A Tầng 1
+    // 12. Riser cáp từ Hub Switch Dãy A T2 hạ xuống Hub Dãy A T1
+    createCable([
+      new THREE.Vector3(36, 10.6, 42),
+      new THREE.Vector3(36, 1.2, 42)
+    ], 0x0077ff, 0.16, 'backbone', 1.8, 3, 20, scene);
+
+    // Tuyến trục hành lang Dãy A Tầng 1
+    createCable([
+      new THREE.Vector3(36, 1.2, 0),
+      new THREE.Vector3(36, 1.2, 20),
+      new THREE.Vector3(36, 1.2, 42),
+      new THREE.Vector3(36, 1.2, 62)
+    ], 0x0077ff, 0.14, 'distribution', 1.6, 5, 48, floorGroups[1]);
+
+    // Nhánh rẽ tới từng Máy Tính & Camera tại các phòng Dãy A T1 (Phòng 1 - 6)
     wingAT1_Bays.forEach(bay => {
       if (bay.isRoom) {
+        // Cáp tới Camera
         createCable([
-          new THREE.Vector3(wingA_X - 4, 1.5, 44),
-          new THREE.Vector3(wingA_X - 4, 1.5, bay.z),
-          new THREE.Vector3(wingA_X, 1.5, bay.z)
-        ], 0x00f0ff, 0.08, 'distribution', 1.1, 2);
+          new THREE.Vector3(36, 1.2, bay.z),
+          new THREE.Vector3(37, 3.5, bay.z - 2)
+        ], 0xff3366, 0.04, 'cctv', 1.2, 1, 12, floorGroups[1]);
+
+        // Cáp tới Máy tính
+        createCable([
+          new THREE.Vector3(36, 1.2, bay.z),
+          new THREE.Vector3(48, 0.6, bay.z)
+        ], 0x00f0ff, 0.05, 'endpoint', 1.2, 1, 16, floorGroups[1]);
       }
     });
 
